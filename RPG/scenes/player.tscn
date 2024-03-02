@@ -326,6 +326,7 @@ animations = [{
 radius = 4.0
 
 [node name="Player" type="CharacterBody2D"]
+y_sort_enabled = true
 script = ExtResource("1_1esmr")
 inventory = ExtResource("2_a6pnx")
 
@@ -345,6 +346,7 @@ limit_right = 360
 limit_bottom = 200
 
 [node name="InventoryUI" parent="." instance=ExtResource("4_4r6bt")]
+visible = false
 offset_left = -41.0
 offset_top = -82.0
 offset_right = 43.0
