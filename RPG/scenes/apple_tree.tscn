@@ -58,6 +58,7 @@ one_shot = true
 [node name="Marker2D" type="Marker2D" parent="."]
 
 [node name="Collisions" type="StaticBody2D" parent="."]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collisions"]
 position = Vector2(0.5, 9)

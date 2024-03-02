@@ -14,6 +14,7 @@ item = ExtResource("2_0v8bi")
 texture = ExtResource("1_n30oo")
 
 [node name="InteractableArea" type="Area2D" parent="."]
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractableArea"]
 shape = SubResource("CircleShape2D_xof5y")
