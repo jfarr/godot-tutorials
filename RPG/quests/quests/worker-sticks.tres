@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Quest" load_steps=2 format=3 uid="uid://jjlau5ikh3e8"]
+
+[ext_resource type="Script" path="res://quests/scripts/quest.gd" id="1_k2opt"]
+
+[resource]
+script = ExtResource("1_k2opt")
+id = "worker-sticks"
+text = "Could you go pick up 3 sticks off the ground?"
+status = 0
+prereqs = Array[ExtResource("1_k2opt")]([])

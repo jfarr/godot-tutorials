@@ -9,7 +9,6 @@ var stick = 0
 func _process(delta):
 	if quest1_active:
 		if stick == 3:
-			print("quest1 completed")
 			quest1_active = false
 			quest1_complete = true
 			play_finish_quest()
@@ -19,7 +18,7 @@ func next_quest():
 		quest1_chat()
 	else:
 		$NoQuest.visible = true
-		await get_tree().create_timer(3).timout
+		await get_tree().create_timer(3).timeout
 		$NoQuest.visible = false
 
 func quest1_chat():
@@ -36,7 +35,6 @@ func _on_no_button_1_pressed():
 
 func stick_collected():
 	stick += 1
-	print("got stick")
 
 func play_finish_quest():
 	$FinishedQuest.visible = true

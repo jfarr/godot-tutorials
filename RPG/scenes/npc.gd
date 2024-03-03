@@ -6,10 +6,11 @@ enum State {
 	MOVE
 }
 
+@export var quest_list : QuestList
+
 const speed = 30
 var current_state = State.IDLE
 var direction = Vector2.RIGHT
-var start_pos
 
 var is_roaming = true
 var is_chatting = false
@@ -18,7 +19,6 @@ var player_in_chat_area = false
 
 func _ready():
 	randomize()
-	start_pos = position
 
 func _process(delta):
 	if current_state == State.IDLE or current_state == State.NEW_DIR:
@@ -56,10 +56,11 @@ func _process(delta):
 func choose(choices):
 	choices.shuffle()
 	return choices.front()
-	
+
 func move(delta):
 	if !is_chatting:
-		position += direction * speed * delta
+		velocity = direction * speed
+		move_and_slide()
 
 func _on_chat_area_body_entered(body):
 	player = body

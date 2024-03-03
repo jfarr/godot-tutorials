@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="QuestList" load_steps=3 format=3 uid="uid://baqrear6nwhcm"]
+
+[ext_resource type="Resource" uid="uid://jjlau5ikh3e8" path="res://quests/quests/worker-sticks.tres" id="1_55b31"]
+[ext_resource type="Script" path="res://quests/scripts/quest_list.gd" id="2_0a6in"]
+
+[resource]
+script = ExtResource("2_0a6in")
+quests = Array[Resource("res://quests/scripts/quest.gd")]([ExtResource("1_55b31")])

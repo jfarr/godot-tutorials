@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://ce4b0mw2jbhd1"]
+
+[ext_resource type="PackedScene" uid="uid://dmemm6brwag5d" path="res://scenes/npc_quest.tscn" id="1_2hj8a"]
+[ext_resource type="Script" path="res://scenes/quest_giver.gd" id="1_7qgvl"]
+
+[node name="QuestGiver" type="Node2D"]
+script = ExtResource("1_7qgvl")
+
+[node name="NPCQuest" parent="." instance=ExtResource("1_2hj8a")]
