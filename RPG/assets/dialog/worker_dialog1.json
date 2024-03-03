@@ -1,0 +1,9 @@
+[
+	{"name":"Worker", "text": "Hello there!"},
+	{"name":"Worker", "text": "I'm just around here working for the 'Red Company'."},
+	{"name":"Worker", "text": "We're out here chopping down all these trees."},
+	{"name":"You", "text": "WHAT?!"},
+	{"name":"Worker", "text": "Yeah, we've got to make a profit somehow!"},
+	{"name":"Worker", "text": "But I've got to get back to work, so take care."}
+]
+

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://diilouqtbm8u"
-path="res://.godot/imported/Human-Worker-Red.png-3302d0d081f784d24d4dd832f6e3d5b5.ctex"
+path="res://.godot/imported/Human-Worker-Red.png-e27beae1ef16b1a9c4fdc682ce609fb8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/Human-Worker-Red.png"
-dest_files=["res://.godot/imported/Human-Worker-Red.png-3302d0d081f784d24d4dd832f6e3d5b5.ctex"]
+source_file="res://assets/character/Human-Worker-Red.png"
+dest_files=["res://.godot/imported/Human-Worker-Red.png-e27beae1ef16b1a9c4fdc682ce609fb8.ctex"]
 
 [params]
 
