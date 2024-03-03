@@ -5,6 +5,8 @@ enum PlayerState {
 	WALKING
 }
 
+signal stick_collected
+
 @export var inventory : Inventory
 @onready var camera = $Camera2D
 

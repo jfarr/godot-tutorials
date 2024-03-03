@@ -47,6 +47,11 @@ func _process(delta):
 		is_roaming = false
 		is_chatting = true
 		$AnimatedSprite2D.play("idle")
+	elif player_in_chat_area and Input.is_action_just_pressed("ui_quest"):
+		$NPCQuest.next_quest()
+		is_roaming = false
+		is_chatting = true
+		$AnimatedSprite2D.play("idle")
 
 func choose(choices):
 	choices.shuffle()
@@ -71,3 +76,12 @@ func _on_timer_timeout():
 func _on_dialog_dialog_finished():
 	is_chatting = false
 	is_roaming = true
+
+
+func _on_npc_quest_quest_menu_closed():
+	is_chatting = false
+	is_roaming = true
+
+func _on_player_stick_collected():
+	$NPCQuest.stick_collected()
+

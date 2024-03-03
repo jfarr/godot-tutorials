@@ -776,3 +776,5 @@ position = Vector2(333, -150)
 
 [node name="NPC" parent="." instance=ExtResource("10_3bs4o")]
 position = Vector2(-79, -19)
+
+[connection signal="stick_collected" from="Player" to="NPC" method="_on_player_stick_collected"]
