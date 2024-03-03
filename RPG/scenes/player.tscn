@@ -343,7 +343,7 @@ zoom = Vector2(2.5, 2.5)
 limit_left = -650
 limit_top = -280
 limit_right = 360
-limit_bottom = 200
+limit_bottom = 675
 
 [node name="InventoryUI" parent="." instance=ExtResource("4_4r6bt")]
 visible = false

@@ -6,6 +6,7 @@ enum PlayerState {
 }
 
 @export var inventory : Inventory
+@onready var camera = $Camera2D
 
 var speed : int = 100
 var player_state : PlayerState = PlayerState.IDLE;
