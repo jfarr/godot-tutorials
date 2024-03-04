@@ -10,7 +10,6 @@ func start():
 	quest_item.item_collected.connect(collect_item)
 
 func collect_item(item : InventoryItem):
-	print("collected quest item:", item.name)
 	if item.name == quest_item.name:
 		if !max_count or count < max_count:
 			count += 1

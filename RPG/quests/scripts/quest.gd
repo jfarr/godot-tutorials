@@ -10,6 +10,7 @@ enum Status {
 
 @export var id : String = ""
 @export_multiline var text : String
+@export_multiline var progress_text : String
 @export var status : Status = Status.NOT_STARTED
 @export var prereqs : Array[Quest]
 @export var collection_tasks : Array[CollectionTask]

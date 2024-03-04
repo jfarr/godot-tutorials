@@ -14,9 +14,9 @@ script = ExtResource("1_k4rn8")
 [node name="Quest" type="NinePatchRect" parent="."]
 visible = false
 layout_mode = 0
-offset_left = -38.0
-offset_top = -55.0
-offset_right = 37.0
+offset_left = -47.0
+offset_top = -77.0
+offset_right = 47.0
 offset_bottom = -10.0
 texture = ExtResource("1_5052p")
 patch_margin_left = 3
@@ -35,28 +35,28 @@ text = "Name"
 
 [node name="Text" type="RichTextLabel" parent="Quest"]
 layout_mode = 0
-offset_left = 7.0
+offset_left = 4.0
 offset_top = 11.0
-offset_right = 162.0
-offset_bottom = 89.0
+offset_right = 217.0
+offset_bottom = 108.0
 scale = Vector2(0.4, 0.4)
 text = "text"
 
 [node name="YesButton1" type="Button" parent="Quest"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 30.0
-offset_right = 74.0
-offset_bottom = 61.0
+offset_left = 61.0
+offset_top = 52.0
+offset_right = 95.0
+offset_bottom = 83.0
 scale = Vector2(0.4, 0.4)
 text = "yes"
 
 [node name="NoButton1" type="Button" parent="Quest"]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 30.0
-offset_right = 90.0
-offset_bottom = 61.0
+offset_left = 76.0
+offset_top = 52.0
+offset_right = 110.0
+offset_bottom = 83.0
 scale = Vector2(0.4, 0.4)
 text = "no"
 
@@ -121,6 +121,35 @@ offset_right = 162.0
 offset_bottom = 89.0
 scale = Vector2(0.4, 0.4)
 text = "Good job! Thank you so much!"
+
+[node name="InProgressQuest" type="NinePatchRect" parent="."]
+visible = false
+offset_left = -38.0
+offset_top = -55.0
+offset_right = 37.0
+offset_bottom = -10.0
+texture = ExtResource("1_5052p")
+patch_margin_left = 3
+patch_margin_top = 3
+patch_margin_right = 3
+patch_margin_bottom = 3
+
+[node name="Name" type="RichTextLabel" parent="InProgressQuest"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 1.0
+offset_right = 75.0
+offset_bottom = 26.0
+scale = Vector2(0.4, 0.4)
+text = "Worker"
+
+[node name="Text" type="RichTextLabel" parent="InProgressQuest"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 11.0
+offset_right = 162.0
+offset_bottom = 89.0
+scale = Vector2(0.4, 0.4)
 
 [connection signal="pressed" from="Quest/YesButton1" to="." method="_on_yes_button_1_pressed"]
 [connection signal="pressed" from="Quest/NoButton1" to="." method="_on_no_button_1_pressed"]

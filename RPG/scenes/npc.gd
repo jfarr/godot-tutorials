@@ -17,6 +17,8 @@ var player = null
 var player_in_chat_area = false
 
 func _ready():
+	$QuestGiver/NPCQuestDialog.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
+	#$NPCQuest.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
 	randomize()
 
 func _process(delta):
