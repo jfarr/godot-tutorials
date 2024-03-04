@@ -6,4 +6,4 @@
 [node name="QuestGiver" type="Node2D"]
 script = ExtResource("1_7qgvl")
 
-[node name="NPCQuest" parent="." instance=ExtResource("1_2hj8a")]
+[node name="NPCQuestDialog" parent="." instance=ExtResource("1_2hj8a")]

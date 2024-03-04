@@ -1,10 +1,11 @@
-[gd_scene load_steps=27 format=3 uid="uid://ci4pmcyddng05"]
+[gd_scene load_steps=28 format=3 uid="uid://ci4pmcyddng05"]
 
 [ext_resource type="Texture2D" uid="uid://diilouqtbm8u" path="res://assets/character/Human-Worker-Red.png" id="1_bafq3"]
 [ext_resource type="Script" path="res://scenes/npc.gd" id="1_rchfd"]
 [ext_resource type="Resource" uid="uid://baqrear6nwhcm" path="res://quests/quests/worker.tres" id="2_s22o1"]
 [ext_resource type="PackedScene" uid="uid://bdu4k02d8wnqa" path="res://scenes/dialog.tscn" id="3_eknlt"]
 [ext_resource type="PackedScene" uid="uid://dmemm6brwag5d" path="res://scenes/npc_quest.tscn" id="4_rh4qx"]
+[ext_resource type="PackedScene" uid="uid://ce4b0mw2jbhd1" path="res://scenes/quest_giver.tscn" id="6_6dh6r"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_04r8f"]
 atlas = ExtResource("1_bafq3")
@@ -170,7 +171,6 @@ radius = 29.0689
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_rchfd")
-quest_list = ExtResource("2_s22o1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4mpa2")
@@ -193,6 +193,9 @@ autostart = true
 [node name="Dialog" parent="." instance=ExtResource("3_eknlt")]
 
 [node name="NPCQuest" parent="." instance=ExtResource("4_rh4qx")]
+
+[node name="QuestGiver" parent="." instance=ExtResource("6_6dh6r")]
+quest_list = ExtResource("2_s22o1")
 
 [connection signal="body_entered" from="ChatArea" to="." method="_on_chat_area_body_entered"]
 [connection signal="body_exited" from="ChatArea" to="." method="_on_chat_area_body_exited"]
