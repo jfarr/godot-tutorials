@@ -1,5 +1,8 @@
 extends Control
 
+class_name NPCQuest
+
+signal quest_menu_opened
 signal quest_menu_closed
 
 var quest = null
@@ -7,6 +10,7 @@ var quest1_active = false
 var quest1_complete = false
 
 func show_quest(npc, quest):
+	quest_menu_opened.emit()
 	self.quest = quest
 	$Quest/Name.text = npc.npc_name
 	$Quest/Text.text = quest.text

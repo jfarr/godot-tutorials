@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://ci4pmcyddng05"]
+[gd_scene load_steps=28 format=3 uid="uid://ci4pmcyddng05"]
 
 [ext_resource type="Texture2D" uid="uid://diilouqtbm8u" path="res://assets/character/Human-Worker-Red.png" id="1_bafq3"]
 [ext_resource type="Script" path="res://scenes/npc.gd" id="1_rchfd"]
@@ -164,6 +164,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ebuht"]
 radius = 5.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_t7sdn"]
+radius = 29.0689
+
 [node name="NPC" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 5
@@ -178,6 +181,11 @@ frame_progress = 0.356045
 position = Vector2(0, 3)
 shape = SubResource("CircleShape2D_ebuht")
 
+[node name="ChatArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChatArea"]
+shape = SubResource("CircleShape2D_t7sdn")
+
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
@@ -189,5 +197,7 @@ quest_list = ExtResource("2_s22o1")
 
 [node name="RandomPath" parent="." instance=ExtResource("6_wkaqu")]
 
+[connection signal="body_entered" from="ChatArea" to="." method="_on_chat_area_body_entered"]
+[connection signal="body_exited" from="ChatArea" to="." method="_on_chat_area_body_exited"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="dialog_finished" from="Dialog" to="." method="_on_dialog_dialog_finished"]

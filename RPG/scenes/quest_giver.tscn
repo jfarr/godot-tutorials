@@ -1,9 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://ce4b0mw2jbhd1"]
+[gd_scene load_steps=4 format=3 uid="uid://ce4b0mw2jbhd1"]
 
 [ext_resource type="PackedScene" uid="uid://dmemm6brwag5d" path="res://scenes/npc_quest.tscn" id="1_2hj8a"]
 [ext_resource type="Script" path="res://scenes/quest_giver.gd" id="1_7qgvl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_78t24"]
+radius = 29.0689
 
 [node name="QuestGiver" type="Node2D"]
 script = ExtResource("1_7qgvl")
 
 [node name="NPCQuestDialog" parent="." instance=ExtResource("1_2hj8a")]
+
+[node name="ChatArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChatArea"]
+shape = SubResource("CircleShape2D_78t24")
+
+[connection signal="body_entered" from="ChatArea" to="." method="_on_chat_area_body_entered"]
+[connection signal="body_exited" from="ChatArea" to="." method="_on_chat_area_body_exited"]
