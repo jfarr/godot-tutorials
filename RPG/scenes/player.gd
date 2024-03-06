@@ -15,7 +15,7 @@ var bow_cooldown = true
 var arrow_scene : PackedScene = preload("res://scenes/arrow.tscn")
 var mouse_direction = null
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 
 	player_state = (

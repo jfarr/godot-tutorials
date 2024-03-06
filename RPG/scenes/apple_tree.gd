@@ -15,7 +15,7 @@ var player_in_area = false
 func _ready():
 	$GrowthTimer.start()
 
-func _process(delta):
+func _process(_delta):
 	if state == State.NO_APPLES:
 		$AnimatedSprite2D.play("no_apples")
 	elif state == State.APPLES:
@@ -24,10 +24,10 @@ func _process(delta):
 			state = State.NO_APPLES
 			drop_apple()
 
-func _on_pickable_area_body_entered(body):
+func _on_pickable_area_body_entered(_body):
 	player_in_area = true
 
-func _on_pickable_area_body_exited(body):
+func _on_pickable_area_body_exited(_body):
 	player_in_area = false
 
 func _on_growth_timer_timeout():

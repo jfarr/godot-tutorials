@@ -10,7 +10,7 @@ var is_path_following = false
 var has_smoke_happened = false
 var is_smoke_happening = false
 
-func _physics_process(delta):
+func _physics_process(_delta):
 
 	if is_opening_cutscene:
 

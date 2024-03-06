@@ -33,7 +33,7 @@ func start(mob : CharacterBody2D):
 		chat_dialog.dialog_started.connect(_on_chat_dialog_dialog_started)
 		chat_dialog.dialog_finished.connect(_on_chat_dialog_dialog_finished)
 
-func process(delta):
+func process(_delta):
 	if !dead:
 		if hostile and player_in_area:
 			chase()
@@ -86,7 +86,7 @@ func _on_detection_area_body_entered(body):
 	player_in_area = true
 	player = body
 
-func _on_detection_area_body_exited(body):
+func _on_detection_area_body_exited(_body):
 	player_in_area = false
 
 func _on_npc_quest_quest_menu_opened():
@@ -105,7 +105,7 @@ func _on_timer_timeout():
 	$Timer.wait_time = choose([0.5, 1.0, 1.5])
 	current_state = choose([State.IDLE, State.NEW_DIR, State.MOVE])
 
-func _on_hitbox_area_entered(area):
+func _on_hitbox_area_entered(_area):
 	if hostile:
 		var damage = 50
 		take_damage(damage)

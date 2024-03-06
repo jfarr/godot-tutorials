@@ -16,5 +16,7 @@ script = ExtResource("1_7qgvl")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ChatArea"]
 shape = SubResource("CircleShape2D_78t24")
 
+[connection signal="quest_menu_closed" from="NPCQuestDialog" to="." method="_on_npc_quest_dialog_quest_menu_closed"]
+[connection signal="quest_menu_opened" from="NPCQuestDialog" to="." method="_on_npc_quest_dialog_quest_menu_opened"]
 [connection signal="body_entered" from="ChatArea" to="." method="_on_chat_area_body_entered"]
 [connection signal="body_exited" from="ChatArea" to="." method="_on_chat_area_body_exited"]
