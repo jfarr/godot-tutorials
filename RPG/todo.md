@@ -11,11 +11,11 @@ x make apples collectibles
 x kill quests
 x fetch quests check current inventory
 x fetch quests remove items from inventory
-- respawn items (sticks)
+x respawn items (sticks)
 - respawn mobs
 - quest HUD
 - bounding box on wandering mobs
-
+ 
 - mob navigation
 - loot tables
 - weapon damage

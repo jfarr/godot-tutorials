@@ -1,12 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bm7dr4rfqfg3s"]
+[gd_scene load_steps=3 format=3 uid="uid://b0ckl7do4yp5u"]
 
-[ext_resource type="Script" path="res://scenes/stick_spawn.gd" id="1_o4w51"]
+[ext_resource type="PackedScene" uid="uid://bm7dr4rfqfg3s" path="res://scenes/item_spawn.tscn" id="1_vsot5"]
+[ext_resource type="PackedScene" uid="uid://vfifaf04atc0" path="res://scenes/stick_collectible.tscn" id="2_ejbq1"]
 
 [node name="StickSpawn" type="Node2D"]
-script = ExtResource("1_o4w51")
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.5
-one_shot = true
-
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[node name="ItemSpawn" parent="." instance=ExtResource("1_vsot5")]
+position = Vector2(-1, 1)
+template = ExtResource("2_ejbq1")

@@ -12,6 +12,7 @@ offset_bottom = 40.0
 script = ExtResource("1_s8g3n")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+visible = false
 layout_mode = 0
 offset_left = -38.0
 offset_top = -55.0
