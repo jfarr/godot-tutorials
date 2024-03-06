@@ -6,11 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://wl82avjrsds1" path="res://assets/environment/survivalgame-trees.png" id="4_gxopw"]
 [ext_resource type="Texture2D" uid="uid://ch6d406cb1icu" path="res://assets/environment/survivalgame-terrian-water.png" id="5_vkd2h"]
 [ext_resource type="PackedScene" uid="uid://3matl8w2ky4" path="res://scenes/apple_tree.tscn" id="6_nvhwr"]
-[ext_resource type="PackedScene" uid="uid://vfifaf04atc0" path="res://scenes/stick_collectible.tscn" id="7_6cdru"]
 [ext_resource type="PackedScene" uid="uid://dfxbmpek8a0ij" path="res://scenes/slime.tscn" id="8_6m154"]
 [ext_resource type="PackedScene" uid="uid://b17xdfucthcj4" path="res://scenes/world_2.tscn" id="9_trvk3"]
 [ext_resource type="PackedScene" uid="uid://ci4pmcyddng05" path="res://scenes/npc.tscn" id="10_3bs4o"]
 [ext_resource type="PackedScene" uid="uid://ket8spyx2k7r" path="res://scenes/quest_npc.tscn" id="11_rrvyw"]
+[ext_resource type="PackedScene" uid="uid://bm7dr4rfqfg3s" path="res://scenes/stick_spawn.tscn" id="12_p3yrq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p6g0s"]
 texture = ExtResource("2_7oy5a")
@@ -752,15 +752,6 @@ position = Vector2(153, -60)
 [node name="AppleTree2" parent="." instance=ExtResource("6_nvhwr")]
 position = Vector2(-4, 28)
 
-[node name="StickCollectible1" parent="." instance=ExtResource("7_6cdru")]
-position = Vector2(213, -93)
-
-[node name="StickCollectible2" parent="." instance=ExtResource("7_6cdru")]
-position = Vector2(-95, 14)
-
-[node name="StickCollectible3" parent="." instance=ExtResource("7_6cdru")]
-position = Vector2(131, 37)
-
 [node name="Collisions" type="StaticBody2D" parent="."]
 collision_layer = 4
 collision_mask = 5
@@ -781,3 +772,12 @@ position = Vector2(-79, -19)
 
 [node name="QuestNPC" parent="." instance=ExtResource("11_rrvyw")]
 position = Vector2(-111, 101)
+
+[node name="StickSpawn1" parent="." instance=ExtResource("12_p3yrq")]
+position = Vector2(203, -104)
+
+[node name="StickSpawn2" parent="." instance=ExtResource("12_p3yrq")]
+position = Vector2(134, 13)
+
+[node name="StickSpawn3" parent="." instance=ExtResource("12_p3yrq")]
+position = Vector2(-97, 3)
