@@ -6,13 +6,17 @@ enum State {
 	MOVE
 }
 
+signal mob_killed(mob)
+
 @export var resource : MOBResource
 @export var walk_speed = 30
 @export var run_speed = 50
+@export var max_distance = 150
 @export var hostile = false
 @export var health = 100
 @export var has_4way_sprite = true
 
+var starting_pos : Vector2
 var roaming = true
 var current_state = State.IDLE
 var direction = Vector2.RIGHT
@@ -23,6 +27,7 @@ var player = null
 
 func start(mob : CharacterBody2D):
 	self.mob = mob
+	starting_pos = mob.position
 	randomize()
 	var quest_dialog = mob.get_node_or_null("QuestGiver/NPCQuestDialog")
 	if quest_dialog:
@@ -44,6 +49,7 @@ func process(_delta):
 func chase():
 	direction = (player.get_global_position() - get_global_position()).normalized()
 	move(run_speed)
+	starting_pos = position
 
 func wander():
 	if roaming:
@@ -51,7 +57,11 @@ func wander():
 			State.NEW_DIR:
 				direction = choose([Vector2.RIGHT, Vector2.UP, Vector2.LEFT, Vector2.DOWN])
 			State.MOVE:
-				move(walk_speed)
+				var distance = ((mob.position + direction * walk_speed) - starting_pos).length()
+				if distance < max_distance:
+					move(walk_speed)
+				else:
+					current_state = State.NEW_DIR
 
 func move(speed):
 	mob.velocity = direction * speed
@@ -121,7 +131,8 @@ func die():
 	$DetectionArea/CollisionShape2D.disabled = true
 	mob.sprite.animation_finished.connect(on_death_animation_finished)
 	mob.sprite.play("death")
-	resource.kill()
+	resource.mob_killed.emit(mob)
+	#resource.kill()
 	drop_item()
 	mob.queue_free()
 

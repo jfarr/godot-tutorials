@@ -9,8 +9,8 @@ var count = 0
 func start():
 	quest_mob.mob_killed.connect(collect_kill)
 
-func collect_kill(mob : MOBResource):
-	if mob.name == quest_mob.name and count < max_count:
+func collect_kill(mob):
+	if mob.resource.name == quest_mob.name and count < max_count:
 		count += 1
 
 func is_completed(_player):

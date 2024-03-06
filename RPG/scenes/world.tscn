@@ -764,10 +764,10 @@ polygon = PackedVector2Array(24, -50, 24, -283, 360, -283, 361, 135, 259, 135, 2
 [node name="World2" parent="." instance=ExtResource("9_trvk3")]
 
 [node name="NPC" parent="." instance=ExtResource("10_3bs4o")]
-position = Vector2(-79, -19)
+position = Vector2(-73, -30)
 
 [node name="QuestNPC" parent="." instance=ExtResource("11_rrvyw")]
-position = Vector2(-111, 101)
+position = Vector2(-74, 114)
 
 [node name="StickSpawn1" parent="." instance=ExtResource("12_p3yrq")]
 position = Vector2(215, -74)

@@ -3,6 +3,7 @@ extends Node2D
 @export var template : PackedScene
 @export var wait_time = 30.0
 
+var spawned_mob = null
 var alive = true
 
 func _ready():
@@ -12,13 +13,17 @@ func _ready():
 	$Timer.start()
 
 func spawn():
-	var scene = template.instantiate()
-	scene.global_position = global_position
-	get_parent().add_child(scene)
-	scene.mob.mob_killed.connect(on_mob_killed)
-
-func on_mob_killed(_item):
-	alive = false
+	spawned_mob = template.instantiate()
+	print("spawned mob: ", spawned_mob)
+	spawned_mob.global_position = global_position
+	get_parent().add_child(spawned_mob)
+	spawned_mob.mob.mob_killed.connect(on_mob_killed)
+ 
+func on_mob_killed(mob):
+	if mob == spawned_mob:
+		print("mob killed:", mob)
+		alive = false
+		spawned_mob.queue_free()
 
 func _on_timer_timeout():
 	if !alive:
