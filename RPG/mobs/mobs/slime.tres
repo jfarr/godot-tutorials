@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MOBResource" load_steps=2 format=3 uid="uid://brup851k07eqb"]
+
+[ext_resource type="Script" path="res://mobs/scripts/mob.gd" id="1_h8tyo"]
+
+[resource]
+script = ExtResource("1_h8tyo")
+name = "Slime"

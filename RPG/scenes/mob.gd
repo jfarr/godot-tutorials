@@ -6,6 +6,7 @@ enum State {
 	MOVE
 }
 
+@export var resource : MOBResource
 @export var walk_speed = 30
 @export var run_speed = 50
 @export var hostile = false
@@ -120,6 +121,7 @@ func die():
 	$DetectionArea/CollisionShape2D.disabled = true
 	mob.sprite.animation_finished.connect(on_death_animation_finished)
 	mob.sprite.play("death")
+	resource.kill()
 	drop_item()
 	mob.queue_free()
 

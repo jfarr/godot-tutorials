@@ -6,7 +6,7 @@ var player_in_chat_area = false
 
 func process(_delta):
 	if player_in_chat_area and Input.is_action_just_pressed("ui_use"):
-		next_quest()
+		next_quest()           
 
 func next_quest():
 	for quest in quest_list.quests:
@@ -14,7 +14,7 @@ func next_quest():
 			quest.turn_in()
 			$NPCQuestDialog.show_finish_quest(get_parent())
 			return
-		if quest.status == Quest.Status.NOT_STARTED:
+		if quest.status == Quest.Status.NOT_STARTED and quest.can_start():
 			$NPCQuestDialog.show_quest(get_parent(), quest)
 			return
 	for quest in quest_list.quests:

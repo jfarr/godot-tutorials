@@ -7,10 +7,10 @@ x refactor mobs
 	x implement dropped items
 	x implement chat dialog
 
-- make apples collectibles
-- bounding box on wandering mobs
+x make apples collectibles
 - kill quests
 - fetch quests remove items from inventory
+- bounding box on wandering mobs
 - quest HUD
 - respawn items (sticks)
 - respawn mobs

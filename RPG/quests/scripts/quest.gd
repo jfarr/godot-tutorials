@@ -14,6 +14,7 @@ enum Status {
 @export var status : Status = Status.NOT_STARTED
 @export var prereqs : Array[Quest]
 @export var collection_tasks : Array[CollectionTask]
+@export var kill_tasks : Array[KillTask]
 
 func can_start():
 	if status != Status.NOT_STARTED:
@@ -26,10 +27,15 @@ func can_start():
 func start():
 	for task in collection_tasks:
 		task.start()
+	for task in kill_tasks:
+		task.start()
 	status = Status.IN_PROGRESS
 
 func is_completed():
 	for task in collection_tasks:
+		if !task.is_completed():
+			return false
+	for task in kill_tasks:
 		if !task.is_completed():
 			return false
 	return true

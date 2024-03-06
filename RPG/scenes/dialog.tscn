@@ -27,16 +27,16 @@ patch_margin_bottom = 3
 layout_mode = 0
 offset_left = 3.0
 offset_top = 1.0
-offset_right = 75.0
+offset_right = 170.0
 offset_bottom = 26.0
 scale = Vector2(0.4, 0.4)
 text = "Name:"
 
 [node name="Text" type="RichTextLabel" parent="NinePatchRect"]
 layout_mode = 0
-offset_left = 3.0
+offset_left = 6.0
 offset_top = 10.0
-offset_right = 173.0
+offset_right = 169.0
 offset_bottom = 88.0
 scale = Vector2(0.4, 0.4)
 text = "Chatting"

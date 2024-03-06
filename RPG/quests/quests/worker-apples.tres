@@ -18,3 +18,4 @@ progress_text = "Do you have those apples yet?"
 status = 0
 prereqs = Array[ExtResource("4_j6jey")]([ExtResource("3_8nbaf")])
 collection_tasks = Array[ExtResource("2_0ai6i")]([SubResource("Resource_n043q")])
+kill_tasks = Array[Resource("res://quests/scripts/kill_task.gd")]([])

@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="QuestList" load_steps=4 format=3 uid="uid://baqrear6nwhcm"]
+[gd_resource type="Resource" script_class="QuestList" load_steps=5 format=3 uid="uid://baqrear6nwhcm"]
 
 [ext_resource type="Resource" uid="uid://jjlau5ikh3e8" path="res://quests/quests/worker-sticks.tres" id="1_55b31"]
 [ext_resource type="Script" path="res://quests/scripts/quest_list.gd" id="2_0a6in"]
 [ext_resource type="Resource" uid="uid://d3sihvchqikml" path="res://quests/quests/worker-apples.tres" id="2_s0kx0"]
+[ext_resource type="Resource" uid="uid://cpt2r8r16as3j" path="res://quests/quests/worker-slimes.tres" id="3_o5y1w"]
 
 [resource]
 script = ExtResource("2_0a6in")
-quests = Array[Resource("res://quests/scripts/quest.gd")]([ExtResource("1_55b31"), ExtResource("2_s0kx0")])
+quests = Array[Resource("res://quests/scripts/quest.gd")]([ExtResource("1_55b31"), ExtResource("2_s0kx0"), ExtResource("3_o5y1w")])
