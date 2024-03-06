@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dfxbmpek8a0ij"]
+[gd_scene load_steps=25 format=3 uid="uid://dfxbmpek8a0ij"]
 
 [ext_resource type="Script" path="res://scenes/slime.gd" id="1_7flfy"]
 [ext_resource type="Texture2D" uid="uid://c3adgns2kf5tl" path="res://assets/character/survivalgame-enemy-slime.png" id="1_uaaok"]
@@ -155,9 +155,6 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_sol33"]
 radius = 5.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_t28kn"]
-radius = 6.0
-
 [node name="Slime" type="CharacterBody2D"]
 collision_layer = 6
 collision_mask = 5
@@ -172,17 +169,6 @@ animation = &"death"
 position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_sol33")
 
-[node name="Hitbox" type="Area2D" parent="."]
-collision_layer = 8
-collision_mask = 8
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(1, 0)
-shape = SubResource("CircleShape2D_t28kn")
-debug_color = Color(1, 0.137255, 0.290196, 0.419608)
-
 [node name="MOB" parent="." instance=ExtResource("6_veb0x")]
 hostile = true
 has_4way_sprite = false
-
-[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

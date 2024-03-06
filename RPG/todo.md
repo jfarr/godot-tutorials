@@ -1,11 +1,11 @@
-- refactor mobs
+x refactor mobs
 	x merge NPCs and hostiles
 	x merge MOB and RandomPath
 	x make slimes collectible
 	x implement MOB hitbox
 	x move death / damage to MOB class
 	x implement dropped items
-	- implement chat dialog
+	x implement chat dialog
 
 - make apples collectibles
 - bounding box on wandering mobs

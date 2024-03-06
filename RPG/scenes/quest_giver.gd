@@ -2,11 +2,10 @@ extends Node2D
 
 @export var quest_list : QuestList
 
-var player = null
 var player_in_chat_area = false
 
-func process(delta):
-	if player_in_chat_area and Input.is_action_just_pressed("ui_quest"):
+func process(_delta):
+	if player_in_chat_area and Input.is_action_just_pressed("ui_use"):
 		next_quest()
 
 func next_quest():
@@ -24,7 +23,6 @@ func next_quest():
 	$NPCQuestDialog.show_no_quest(get_parent())
 
 func _on_chat_area_body_entered(body):
-	player = body
 	player_in_chat_area = true
 
 func _on_chat_area_body_exited(body):

@@ -1,80 +1,81 @@
-[gd_scene load_steps=25 format=3 uid="uid://ci4pmcyddng05"]
+[gd_scene load_steps=26 format=3 uid="uid://ket8spyx2k7r"]
 
-[ext_resource type="Texture2D" uid="uid://diilouqtbm8u" path="res://assets/character/Human-Worker-Red.png" id="1_bafq3"]
-[ext_resource type="Script" path="res://scenes/npc.gd" id="1_rchfd"]
-[ext_resource type="PackedScene" uid="uid://cw8ohp5fqimiq" path="res://scenes/npc_chat.tscn" id="7_ihdk8"]
-[ext_resource type="PackedScene" uid="uid://biaagdp30cc7y" path="res://scenes/mob.tscn" id="7_q4mmb"]
+[ext_resource type="Script" path="res://scenes/quest_npc.gd" id="1_pqcce"]
+[ext_resource type="Texture2D" uid="uid://diilouqtbm8u" path="res://assets/character/Human-Worker-Red.png" id="2_n8hm6"]
+[ext_resource type="PackedScene" uid="uid://biaagdp30cc7y" path="res://scenes/mob.tscn" id="3_twss1"]
+[ext_resource type="PackedScene" uid="uid://ce4b0mw2jbhd1" path="res://scenes/quest_giver.tscn" id="4_skrjj"]
+[ext_resource type="Resource" uid="uid://baqrear6nwhcm" path="res://quests/quests/worker.tres" id="5_dfdex"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_asejx"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u7psj"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_04r8f"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(32, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fpum0"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(64, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nydcy"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(96, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pjrao"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(128, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2idnl"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(32, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pmpa5"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(64, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3k0yq"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(96, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_odoyy"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(128, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k80wc"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vl6gx"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(64, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1va3p"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u6oj3"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(128, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_226gd"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(32, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vi3ai"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(64, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6o5b7"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(96, 192, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ss1nd"]
-atlas = ExtResource("1_bafq3")
+atlas = ExtResource("2_n8hm6")
 region = Rect2(128, 192, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4mpa2"]
@@ -162,10 +163,10 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ebuht"]
 radius = 5.0
 
-[node name="NPC" type="CharacterBody2D"]
+[node name="QuestNPC" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 5
-script = ExtResource("1_rchfd")
+script = ExtResource("1_pqcce")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4mpa2")
@@ -175,7 +176,7 @@ animation = &"idle"
 position = Vector2(0, 3)
 shape = SubResource("CircleShape2D_ebuht")
 
-[node name="MOB" parent="." instance=ExtResource("7_q4mmb")]
+[node name="MOB" parent="." instance=ExtResource("3_twss1")]
 
-[node name="NPCChat" parent="." instance=ExtResource("7_ihdk8")]
-dialog_file = "res://assets/dialog/worker_dialog1.json"
+[node name="QuestGiver" parent="." instance=ExtResource("4_skrjj")]
+quest_list = ExtResource("5_dfdex")

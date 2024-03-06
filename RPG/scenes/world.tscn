@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dxsma8yxiie"]
+[gd_scene load_steps=17 format=3 uid="uid://dxsma8yxiie"]
 
 [ext_resource type="PackedScene" uid="uid://co5kbfotht6aw" path="res://scenes/player.tscn" id="1_ab83s"]
 [ext_resource type="Texture2D" uid="uid://dbig81fdm7y51" path="res://assets/environment/survivalgame-terrian-defult.png" id="2_7oy5a"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dfxbmpek8a0ij" path="res://scenes/slime.tscn" id="8_6m154"]
 [ext_resource type="PackedScene" uid="uid://b17xdfucthcj4" path="res://scenes/world_2.tscn" id="9_trvk3"]
 [ext_resource type="PackedScene" uid="uid://ci4pmcyddng05" path="res://scenes/npc.tscn" id="10_3bs4o"]
+[ext_resource type="PackedScene" uid="uid://ket8spyx2k7r" path="res://scenes/quest_npc.tscn" id="11_rrvyw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p6g0s"]
 texture = ExtResource("2_7oy5a")
@@ -777,3 +778,6 @@ position = Vector2(165, -137)
 
 [node name="NPC" parent="." instance=ExtResource("10_3bs4o")]
 position = Vector2(-79, -19)
+
+[node name="QuestNPC" parent="." instance=ExtResource("11_rrvyw")]
+position = Vector2(-111, 101)

@@ -12,7 +12,7 @@ max_count = 3
 [resource]
 script = ExtResource("1_k2opt")
 id = "worker-sticks"
-text = "Could you go pick up 3 sticks off the ground?"
+text = "I could use some help. Could you go pick up 3 sticks off the ground and bring them to me?"
 progress_text = "Please hury up with those sticks."
 status = 0
 prereqs = Array[ExtResource("1_k2opt")]([])

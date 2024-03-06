@@ -27,6 +27,10 @@ func start(mob : CharacterBody2D):
 	if quest_dialog:
 		quest_dialog.quest_menu_opened.connect(_on_npc_quest_quest_menu_opened)
 		quest_dialog.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
+	var chat_dialog = mob.get_node_or_null("NPCChat/Dialog")
+	if chat_dialog:
+		chat_dialog.dialog_started.connect(_on_chat_dialog_dialog_started)
+		chat_dialog.dialog_finished.connect(_on_chat_dialog_dialog_finished)
 
 func process(delta):
 	if !dead:
@@ -88,6 +92,12 @@ func _on_npc_quest_quest_menu_opened():
 	roaming = false
 
 func _on_npc_quest_quest_menu_closed():
+	roaming = true
+
+func _on_chat_dialog_dialog_started():
+	roaming = false
+
+func _on_chat_dialog_dialog_finished():
 	roaming = true
 
 func _on_timer_timeout():

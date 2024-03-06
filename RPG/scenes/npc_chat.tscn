@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw8ohp5fqimiq"]
+
+[ext_resource type="Script" path="res://scenes/npc_chat.gd" id="1_ogsk7"]
+[ext_resource type="PackedScene" uid="uid://bdu4k02d8wnqa" path="res://scenes/dialog.tscn" id="1_x533p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yosap"]
+radius = 29.0689
+
+[node name="NPCChat" type="Node2D"]
+script = ExtResource("1_ogsk7")
+
+[node name="Dialog" parent="." instance=ExtResource("1_x533p")]
+
+[node name="ChatArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChatArea"]
+shape = SubResource("CircleShape2D_yosap")
+
+[connection signal="body_entered" from="ChatArea" to="." method="_on_chat_area_body_entered"]
+[connection signal="body_exited" from="ChatArea" to="." method="_on_chat_area_body_exited"]
