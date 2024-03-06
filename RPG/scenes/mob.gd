@@ -1,38 +1,86 @@
 extends Node2D
 
-var speed = 50
+enum State {
+	IDLE,
+	NEW_DIR,
+	MOVE
+}
+
+@export var walk_speed = 30
+@export var run_speed = 50
+@export var hostile = false
+@export var health = 100
+@export var has_4way_sprite = true
+
+var roaming = true
+var current_state = State.IDLE
+var direction = Vector2.RIGHT
 var dead = false
-var health = 100
 var player_in_area = false
 var mob = null
 var player = null
 
 func start(mob : CharacterBody2D):
 	self.mob = mob
-	$RandomPath.start(mob)
+	randomize()
+	var quest_dialog = mob.get_node_or_null("QuestGiver/NPCQuestDialog")
+	if quest_dialog:
+		quest_dialog.quest_menu_opened.connect(_on_npc_quest_quest_menu_opened)
+		quest_dialog.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
 
 func process(delta):
 	if !dead:
-		if player_in_area:
-			move()
+		if hostile and player_in_area:
+			chase()
 		else:
-			$RandomPath.process(delta)
-	animate()
+			wander()
+		animate()
 
-func move():
-	var direction : Vector2 = (player.get_global_position() - get_global_position()).normalized()
+func chase():
+	direction = (player.get_global_position() - get_global_position()).normalized()
+	move(run_speed)
+
+func wander():
+	if roaming:
+		match current_state:
+			State.NEW_DIR:
+				direction = choose([Vector2.RIGHT, Vector2.UP, Vector2.LEFT, Vector2.DOWN])
+			State.MOVE:
+				move(walk_speed)
+
+func move(speed):
 	mob.velocity = direction * speed
 	mob.move_and_slide()
+	
+func choose(choices):
+	choices.shuffle()
+	return choices.front()
 
 func animate():
-	if dead:
-		mob.sprite.play("death")
-	elif player_in_area:
-		mob.sprite.play("move")
+	var sprite = mob.sprite
+	if !dead:
+		if is_moving():
+			if has_4way_sprite:
+				if direction.x == -1:
+					sprite.play("move-w")
+				elif direction.x == 1:
+					sprite.play("move-e")
+				elif direction.y == -1:
+					sprite.play("move-n")
+				elif direction.y == 1:
+					sprite.play("move-s")
+			else:
+				sprite.play("move")
+		else:
+			sprite.play("idle")
+
+func is_moving():
+	return (roaming and current_state == State.MOVE) or (hostile and player_in_area)
 
 func die():
 	dead = true
 	$DetectionArea/CollisionShape2D.disabled = true
+	mob.sprite.play("death")
 
 func _on_detection_area_body_entered(body):
 	player_in_area = true
@@ -40,3 +88,13 @@ func _on_detection_area_body_entered(body):
 
 func _on_detection_area_body_exited(body):
 	player_in_area = false
+
+func _on_npc_quest_quest_menu_opened():
+	roaming = false
+
+func _on_npc_quest_quest_menu_closed():
+	roaming = true
+
+func _on_timer_timeout():
+	$Timer.wait_time = choose([0.5, 1.0, 1.5])
+	current_state = choose([State.IDLE, State.NEW_DIR, State.MOVE])

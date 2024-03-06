@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://biaagdp30cc7y"]
+[gd_scene load_steps=4 format=3 uid="uid://biaagdp30cc7y"]
 
 [ext_resource type="Script" path="res://scenes/mob.gd" id="1_n33ms"]
-[ext_resource type="PackedScene" uid="uid://dht73yfhi4e3c" path="res://scenes/random_path.tscn" id="2_docr5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_00gbd"]
 radius = 6.0
@@ -11,8 +10,6 @@ radius = 73.0
 
 [node name="MOB" type="Node2D"]
 script = ExtResource("1_n33ms")
-
-[node name="RandomPath" parent="." instance=ExtResource("2_docr5")]
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 8
@@ -30,5 +27,10 @@ collision_layer = 2
 position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_47obn")
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

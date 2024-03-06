@@ -1,12 +1,7 @@
 extends CharacterBody2D
 
 var mob_name = "slime"
-#var speed = 50
 var health = 100
-#var damage
-#var dead = false
-#var player_in_area = false
-#var player = null
 
 @onready var sprite = $AnimatedSprite2D
 @onready var slime_scene = $SlimeCollectible
@@ -18,13 +13,6 @@ func _ready():
 
 func _physics_process(delta):
 	$MOB.process(delta)
-#
-#func _on_detection_area_body_entered(body):
-	#player_in_area = true
-	#player = body
-#
-#func _on_detection_area_body_exited(body):
-	#player_in_area = false
 
 func _on_hitbox_area_entered(area):
 	var damage = 50
@@ -37,14 +25,12 @@ func take_damage(damage):
 
 func die():
 	$MOB.die()
-	#$AnimatedSprite2D.play("death")
 	await get_tree().create_timer(1).timeout
 	
 	drop_slime()
 	
 	$AnimatedSprite2D.visible = false
 	$Hitbox/CollisionShape2D.disabled = true
-	#$DetectionArea/CollisionShape2D.disabled = true
 
 func drop_slime():
 	slime_scene.visible = true

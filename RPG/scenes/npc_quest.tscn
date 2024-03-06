@@ -124,6 +124,7 @@ text = "Good job! Thank you so much!"
 
 [node name="InProgressQuest" type="NinePatchRect" parent="."]
 visible = false
+layout_mode = 0
 offset_left = -38.0
 offset_top = -55.0
 offset_right = 37.0
