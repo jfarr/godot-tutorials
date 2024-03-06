@@ -9,9 +9,8 @@ enum State {
 
 var apple_scene : PackedScene = preload("res://scenes/apple_collectible.tscn")
 
-var state : State = State.NO_APPLES
+var state : State = State.APPLES
 var player_in_area = false
-var player = null
 
 func _ready():
 	$GrowthTimer.start()
@@ -26,7 +25,6 @@ func _process(delta):
 			drop_apple()
 
 func _on_pickable_area_body_entered(body):
-	player = body
 	player_in_area = true
 
 func _on_pickable_area_body_exited(body):
@@ -39,7 +37,4 @@ func drop_apple():
 	var apple = apple_scene.instantiate()
 	apple.global_position = $Marker2D.global_position
 	get_parent().add_child(apple)
-	player.collect(item)
-	
-	await get_tree().create_timer(3).timeout
 	$GrowthTimer.start()

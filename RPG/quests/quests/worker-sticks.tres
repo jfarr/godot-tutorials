@@ -17,3 +17,4 @@ progress_text = "Please hury up with those sticks."
 status = 0
 prereqs = Array[ExtResource("1_k2opt")]([])
 collection_tasks = Array[ExtResource("1_x26uv")]([SubResource("Resource_uxsmg")])
+kill_tasks = Array[Resource("res://quests/scripts/kill_task.gd")]([])
