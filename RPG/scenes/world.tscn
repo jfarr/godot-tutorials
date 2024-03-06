@@ -771,7 +771,7 @@ polygon = PackedVector2Array(24, -50, 24, -283, 360, -283, 361, 135, 259, 135, 2
 position = Vector2(243, 77)
 
 [node name="Slime2" parent="." instance=ExtResource("8_6m154")]
-position = Vector2(333, -150)
+position = Vector2(165, -137)
 
 [node name="World2" parent="." instance=ExtResource("9_trvk3")]
 

@@ -10,40 +10,43 @@ var speed = 30
 var current_state = State.IDLE
 var direction = Vector2.RIGHT
 var is_roaming = true
+var mob = null
 
-func start(quest_dialog : NPCQuest):
+func start(mob : CharacterBody2D):
+	self.mob = mob
 	randomize()
-	quest_dialog.quest_menu_opened.connect(_on_npc_quest_quest_menu_opened)
-	quest_dialog.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
+	if "quest_dialog" in mob.get_property_list() and mob.quest_dialog:
+		mob.quest_dialog.quest_menu_opened.connect(_on_npc_quest_quest_menu_opened)
+		mob.quest_dialog.quest_menu_closed.connect(_on_npc_quest_quest_menu_closed)
 
-func process(mob : CharacterBody2D, delta):
-	animate(mob)
+func process(delta):
+	animate()
 	if is_roaming:
 		match current_state:
 			State.NEW_DIR:
 				direction = choose([Vector2.RIGHT, Vector2.UP, Vector2.LEFT, Vector2.DOWN])
 			State.MOVE:
-				move(mob, delta)
+				move(delta)
 
-func animate(mob : CharacterBody2D):
+func animate():
 	var sprite = mob.sprite
 	if !is_roaming or current_state == State.IDLE or current_state == State.NEW_DIR:
 		sprite.play("idle")
 	elif current_state == State.MOVE:
 		if direction.x == -1:
 			sprite.play("w-walk")
-		elif direction.x == -1:
+		elif direction.x == 1:
 			sprite.play("e-walk")
 		elif direction.y == -1:
 			sprite.play("n-walk")
 		elif direction.y == 1:
-			sprite.play("x-walk")
+			sprite.play("s-walk")
 
 func choose(choices):
 	choices.shuffle()
 	return choices.front()
 
-func move(mob, delta):
+func move(delta):
 	mob.velocity = direction * speed
 	mob.move_and_slide()
 
