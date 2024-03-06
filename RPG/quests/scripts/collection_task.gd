@@ -4,14 +4,12 @@ class_name CollectionTask
 
 @export var quest_item : InventoryItem
 @export var max_count = 0
-var count = 0
 
 func start():
-	quest_item.item_collected.connect(collect_item)
+	pass
 
-func collect_item(item : InventoryItem):
-	if item.name == quest_item.name and count < max_count:
-		count += 1
+func is_completed(player):
+	return player.inventory.contains_items(quest_item, max_count)
 
-func is_completed():
-	return count == max_count
+func turn_in(player):
+	player.inventory.remove_items(quest_item, max_count)
