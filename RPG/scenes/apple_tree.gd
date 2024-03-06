@@ -40,8 +40,6 @@ func drop_apple():
 	apple.global_position = $Marker2D.global_position
 	get_parent().add_child(apple)
 	player.collect(item)
-	item.collect_item()
 	
 	await get_tree().create_timer(3).timeout
 	$GrowthTimer.start()
-

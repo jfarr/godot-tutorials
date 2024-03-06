@@ -84,6 +84,7 @@ func play_animation(direction):
 
 func collect(item : InventoryItem):
 	inventory.insert(item)
+	item.collect_item()
 
 func _on_shoot_timer_timeout():
 	bow_cooldown = true

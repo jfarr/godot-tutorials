@@ -77,11 +77,6 @@ func animate():
 func is_moving():
 	return (roaming and current_state == State.MOVE) or (hostile and player_in_area)
 
-func die():
-	dead = true
-	$DetectionArea/CollisionShape2D.disabled = true
-	mob.sprite.play("death")
-
 func _on_detection_area_body_entered(body):
 	player_in_area = true
 	player = body
@@ -98,3 +93,32 @@ func _on_npc_quest_quest_menu_closed():
 func _on_timer_timeout():
 	$Timer.wait_time = choose([0.5, 1.0, 1.5])
 	current_state = choose([State.IDLE, State.NEW_DIR, State.MOVE])
+
+func _on_hitbox_area_entered(area):
+	if hostile:
+		var damage = 50
+		take_damage(damage)
+
+func take_damage(damage):
+	health -= damage
+	if health <= 0:
+		die()
+
+func die():
+	dead = true
+	$Hitbox/CollisionShape2D.disabled = true
+	$DetectionArea/CollisionShape2D.disabled = true
+	mob.sprite.animation_finished.connect(on_death_animation_finished)
+	mob.sprite.play("death")
+	drop_item()
+	mob.queue_free()
+
+func on_death_animation_finished():
+	mob.sprite.visible = false
+	mob.sprite.animation_finished.disconnect(on_death_animation_finished)
+
+func drop_item():
+	if mob.collectible:
+		var drop = mob.collectible.instantiate()
+		drop.global_position = global_position
+		mob.get_parent().add_child(drop)

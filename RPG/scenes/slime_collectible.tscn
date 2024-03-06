@@ -1,9 +1,32 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5dm21np8atbc"]
+[gd_scene load_steps=6 format=3 uid="uid://b5dm21np8atbc"]
 
 [ext_resource type="Texture2D" uid="uid://dirwsh7drs4b4" path="res://assets/environment/SlimeIcon.png" id="1_i0ra1"]
+[ext_resource type="Script" path="res://scenes/slime_collectible.gd" id="1_yqavf"]
+[ext_resource type="Resource" uid="uid://cxm1lxwh2h2fv" path="res://inventory/items/slime.tres" id="2_7j1g3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tju0h"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_125lq"]
+radius = 12.0
 
 [node name="SlimeCollectible" type="StaticBody2D"]
 scale = Vector2(0.5, 0.5)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_yqavf")
+item = ExtResource("2_7j1g3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_i0ra1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_tju0h")
+
+[node name="InteractableArea" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractableArea"]
+shape = SubResource("CircleShape2D_125lq")
+
+[connection signal="body_entered" from="InteractableArea" to="." method="_on_interactable_area_body_entered"]

@@ -1,8 +1,7 @@
-[gd_scene load_steps=29 format=3 uid="uid://dfxbmpek8a0ij"]
+[gd_scene load_steps=26 format=3 uid="uid://dfxbmpek8a0ij"]
 
 [ext_resource type="Script" path="res://scenes/slime.gd" id="1_7flfy"]
 [ext_resource type="Texture2D" uid="uid://c3adgns2kf5tl" path="res://assets/character/survivalgame-enemy-slime.png" id="1_uaaok"]
-[ext_resource type="Resource" uid="uid://cxm1lxwh2h2fv" path="res://inventory/items/slime.tres" id="2_v1ogi"]
 [ext_resource type="PackedScene" uid="uid://b5dm21np8atbc" path="res://scenes/slime_collectible.tscn" id="2_y0lyt"]
 [ext_resource type="PackedScene" uid="uid://biaagdp30cc7y" path="res://scenes/mob.tscn" id="6_veb0x"]
 
@@ -108,7 +107,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c06xe")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 9.0
 }, {
@@ -159,22 +158,15 @@ radius = 5.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_t28kn"]
 radius = 6.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_d7u45"]
-radius = 73.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_vfjgv"]
-radius = 1015.14
-
 [node name="Slime" type="CharacterBody2D"]
 collision_layer = 6
 collision_mask = 5
 script = ExtResource("1_7flfy")
-slime_item = ExtResource("2_v1ogi")
+collectible = ExtResource("2_y0lyt")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_oa26c")
-animation = &"move"
-frame_progress = 0.435825
+animation = &"death"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 0)
@@ -189,26 +181,8 @@ position = Vector2(1, 0)
 shape = SubResource("CircleShape2D_t28kn")
 debug_color = Color(1, 0.137255, 0.290196, 0.419608)
 
-[node name="DetectionArea" type="Area2D" parent="."]
-collision_layer = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-position = Vector2(1, 0)
-shape = SubResource("CircleShape2D_d7u45")
-
-[node name="SlimeCollectible" parent="." instance=ExtResource("2_y0lyt")]
-visible = false
-
-[node name="CollectionArea" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollectionArea"]
-position = Vector2(2, 0)
-shape = SubResource("CircleShape2D_vfjgv")
-disabled = true
-
 [node name="MOB" parent="." instance=ExtResource("6_veb0x")]
 hostile = true
 has_4way_sprite = false
 
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
-[connection signal="body_entered" from="CollectionArea" to="." method="_on_collection_area_body_entered"]
