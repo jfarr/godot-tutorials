@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="Quest" load_steps=6 format=3 uid="uid://d3sihvchqikml"]
+[gd_resource type="Resource" script_class="Quest" load_steps=5 format=3 uid="uid://d3sihvchqikml"]
 
 [ext_resource type="Resource" uid="uid://ded4h3hxnnnt" path="res://inventory/items/apple.tres" id="1_7g0ph"]
 [ext_resource type="Script" path="res://quests/scripts/collection_task.gd" id="2_0ai6i"]
-[ext_resource type="Resource" uid="uid://jjlau5ikh3e8" path="res://quests/quests/worker-sticks.tres" id="3_8nbaf"]
 [ext_resource type="Script" path="res://quests/scripts/quest.gd" id="4_j6jey"]
 
 [sub_resource type="Resource" id="Resource_n043q"]
@@ -13,9 +12,9 @@ max_count = 3
 [resource]
 script = ExtResource("4_j6jey")
 id = "worker-apples"
-text = "Thank you for the sticks. Could you also collect 3 apples? Chopping trees is hungry work.                  "
+text = "While you're at it could you also collect 3 apples? Chopping trees is hungry work.                  "
 progress_text = "Do you have those apples yet?"
 status = 0
-prereqs = Array[ExtResource("4_j6jey")]([ExtResource("3_8nbaf")])
+prereqs = Array[ExtResource("4_j6jey")]([])
 collection_tasks = Array[ExtResource("2_0ai6i")]([SubResource("Resource_n043q")])
 kill_tasks = Array[Resource("res://quests/scripts/kill_task.gd")]([])

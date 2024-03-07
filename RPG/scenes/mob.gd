@@ -6,8 +6,6 @@ enum State {
 	MOVE
 }
 
-#signal mob_killed(mob)
-
 @export var resource : MOBResource
 @export var walk_speed = 30
 @export var run_speed = 50

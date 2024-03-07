@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="Quest" load_steps=6 format=3 uid="uid://cpt2r8r16as3j"]
+[gd_resource type="Resource" script_class="Quest" load_steps=7 format=3 uid="uid://cpt2r8r16as3j"]
 
 [ext_resource type="Resource" uid="uid://brup851k07eqb" path="res://mobs/mobs/slime.tres" id="1_1pglb"]
 [ext_resource type="Script" path="res://quests/scripts/quest.gd" id="1_u8y77"]
 [ext_resource type="Script" path="res://quests/scripts/kill_task.gd" id="2_ivmi3"]
 [ext_resource type="Resource" uid="uid://d3sihvchqikml" path="res://quests/quests/worker-apples.tres" id="3_hg0r0"]
+[ext_resource type="Resource" uid="uid://jjlau5ikh3e8" path="res://quests/quests/worker-sticks.tres" id="4_4w5tv"]
 
 [sub_resource type="Resource" id="Resource_wrsyr"]
 script = ExtResource("2_ivmi3")
@@ -16,6 +17,6 @@ id = ""
 text = "Can you help us with the slimes menacing our operation? Please kill 2 slimes."
 progress_text = "Please hurry up and kill those slimes!"
 status = 0
-prereqs = Array[ExtResource("1_u8y77")]([ExtResource("3_hg0r0")])
+prereqs = Array[ExtResource("1_u8y77")]([ExtResource("3_hg0r0"), ExtResource("4_4w5tv")])
 collection_tasks = Array[Resource("res://quests/scripts/collection_task.gd")]([])
 kill_tasks = Array[ExtResource("2_ivmi3")]([SubResource("Resource_wrsyr")])

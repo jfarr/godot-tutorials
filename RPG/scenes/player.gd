@@ -99,14 +99,14 @@ func collect(object):
 	quests_updated.emit(quest_list.quests)
 
 func start_quest(quest):
-	print("start quest: ", quest)
 	quest_list.start_quest(quest)
 	quests_updated.emit(quest_list.quests)
 
 func complete_quest(quest):
-	print("complete quest: ", quest)
 	quest_list.complete_quest(self, quest)
 	quests_updated.emit(quest_list.quests)
 
 func _on_mob_killed(mob):
+	print("mob killed: ", mob)
+	await get_tree().create_timer(0.5).timeout
 	quests_updated.emit(quest_list.quests)
