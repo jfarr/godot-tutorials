@@ -82,9 +82,9 @@ func play_animation(direction):
 
 		$AnimatedSprite2D.play(animation_dir + "-" + animation)
 
-func collect(item : InventoryItem):
-	inventory.insert(item)
-	item.collect_item()
+func collect(object):
+	inventory.insert(object.item)
+	object.item.collect_item(object)
 
 func _on_shoot_timer_timeout():
 	bow_cooldown = true

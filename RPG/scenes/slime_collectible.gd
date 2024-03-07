@@ -9,5 +9,5 @@ func _on_interactable_area_body_entered(body):
 	player_collect()
 
 func player_collect():
-	player.collect(item)
+	player.collect(self)
 	self.queue_free()
