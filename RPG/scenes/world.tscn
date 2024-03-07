@@ -1,5 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://dxsma8yxiie"]
 
+[ext_resource type="Script" path="res://scenes/world.gd" id="1_3jkqt"]
 [ext_resource type="PackedScene" uid="uid://co5kbfotht6aw" path="res://scenes/player.tscn" id="1_ab83s"]
 [ext_resource type="Texture2D" uid="uid://dbig81fdm7y51" path="res://assets/environment/survivalgame-terrian-defult.png" id="2_7oy5a"]
 [ext_resource type="Texture2D" uid="uid://c21x188iidnde" path="res://assets/environment/survivalgame-terrian-cliffs.png" id="3_pg1ju"]
@@ -14,13 +15,6 @@
 [ext_resource type="PackedScene" uid="uid://bm7dr4rfqfg3s" path="res://scenes/item_spawn.tscn" id="12_p3yrq"]
 [ext_resource type="PackedScene" uid="uid://ceno27l8qy8c8" path="res://scenes/mob_spawn.tscn" id="13_pf47i"]
 [ext_resource type="PackedScene" uid="uid://bd0hj54cy6yq2" path="res://scenes/quest_hud.tscn" id="14_qmbea"]
-
-[sub_resource type="GDScript" id="GDScript_c7k2s"]
-script/source = "extends Node2D
-
-func _on_quests_updated(quests):
-	$HUDLayer/QuestHUD.update(quests)
-"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p6g0s"]
 texture = ExtResource("2_7oy5a")
@@ -738,7 +732,7 @@ sources/3 = SubResource("TileSetAtlasSource_i456v")
 
 [node name="World" type="Node2D"]
 y_sort_enabled = true
-script = SubResource("GDScript_c7k2s")
+script = ExtResource("1_3jkqt")
 
 [node name="Player" parent="." instance=ExtResource("1_ab83s")]
 

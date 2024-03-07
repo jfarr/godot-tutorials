@@ -6,7 +6,7 @@ enum State {
 	MOVE
 }
 
-signal mob_killed(mob)
+#signal mob_killed(mob)
 
 @export var resource : MOBResource
 @export var walk_speed = 30
@@ -132,7 +132,6 @@ func die():
 	mob.sprite.animation_finished.connect(on_death_animation_finished)
 	mob.sprite.play("death")
 	resource.mob_killed.emit(mob)
-	#resource.kill()
 	drop_item()
 	mob.queue_free()
 

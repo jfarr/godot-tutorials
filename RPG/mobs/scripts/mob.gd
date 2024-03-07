@@ -2,9 +2,6 @@ extends Resource
 
 class_name MOBResource
 
-signal mob_killed(mob: MOBResource)
+signal mob_killed(mob)
 
 @export var name : String
-#
-#func kill():
-	#mob_killed.emit(self)

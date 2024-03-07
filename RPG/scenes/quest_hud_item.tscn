@@ -26,7 +26,7 @@ grow_vertical = 2
 text = "Kill Slime "
 label_settings = SubResource("LabelSettings_l1s3t")
 
-[node name="ProgessLabel" type="Label" parent="."]
+[node name="ProgressLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0

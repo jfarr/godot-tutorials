@@ -17,12 +17,13 @@ func insert(item : InventoryItem):
 			empty_slots[0].amount = 1
 	update.emit()
 
-func contains_items(item : InventoryItem, count : int = 1):
-	var current_count = 0
+func count_items(item : InventoryItem):
+	#var current_count = 0
 	var item_slots = slots.filter(func(slot): return slot.item == item)
-	for slot in item_slots:
-		current_count += slot.amount
-	return current_count >= count
+	return item_slots.map(func(item): return item.amount).reduce(func(a, b): return a + b, 0)
+	#for slot in item_slots:
+		#current_count += slot.amount
+	#return current_count
 
 func remove_items(item : InventoryItem, count : int = 1):
 	var item_slots = slots.filter(func(slot): return slot.item == item)

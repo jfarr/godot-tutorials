@@ -10,7 +10,7 @@ func start():
 	quest_mob.mob_killed.connect(collect_kill)
 
 func collect_kill(mob):
-	if mob.resource.name == quest_mob.name and count < max_count:
+	if mob.mob.name == quest_mob.name and count < max_count:
 		count += 1
 
 func can_complete(_player):
@@ -21,3 +21,6 @@ func complete(_player):
 
 func get_display_text():
 	return "Kill " + quest_mob.name
+
+func get_progress_text(_player):
+	return "%s/%s" % [min(max_count, count), max_count]

@@ -5,7 +5,7 @@ enum PlayerState {
 	WALKING
 }
 
-#signal quests_updated(quests)
+signal quests_updated(quests)
 
 @export var inventory : Inventory
 @onready var camera = $Camera2D
@@ -19,8 +19,9 @@ var mouse_direction = null
 
 var quest_list = QuestList.new()
 
-#func _ready():
-	#quests_updated.connect(get_parent()._on_quests_updated)
+func _ready():
+	quests_updated.connect(get_parent()._on_quests_updated)
+	$MOB.resource.mob_killed.connect(_on_mob_killed)
 
 func _physics_process(_delta):
 	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -95,13 +96,17 @@ func _on_shoot_timer_timeout():
 func collect(object):
 	inventory.insert(object.item)
 	object.item.collect_item(object)
+	quests_updated.emit(quest_list.quests)
 
 func start_quest(quest):
 	print("start quest: ", quest)
 	quest_list.start_quest(quest)
-	#quests_updated.emit(quest_list.quests)
+	quests_updated.emit(quest_list.quests)
 
 func complete_quest(quest):
 	print("complete quest: ", quest)
 	quest_list.complete_quest(self, quest)
-	#quests_updated.emit(quest_list.quests)
+	quests_updated.emit(quest_list.quests)
+
+func _on_mob_killed(mob):
+	quests_updated.emit(quest_list.quests)
