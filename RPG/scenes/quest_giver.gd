@@ -12,15 +12,16 @@ func process(_delta):
 
 func next_quest():
 	for quest in quest_list.quests:
-		if quest.status == Quest.Status.IN_PROGRESS and quest.is_completed(player):
-			quest.turn_in(player)
+		if quest.status == Quest.Status.IN_PROGRESS and quest.can_complete(player):
+			player.complete_quest(quest)
+			#quest.turn_in(player)
 			$NPCQuestDialog.show_finish_quest(get_parent())
 			return
 		if quest.status == Quest.Status.NOT_STARTED and quest.can_start():
-			$NPCQuestDialog.show_quest(get_parent(), quest)
+			$NPCQuestDialog.show_quest(player, get_parent(), quest)
 			return
 	for quest in quest_list.quests:
-		if quest.status == Quest.Status.IN_PROGRESS and not quest.is_completed(player):
+		if quest.status == Quest.Status.IN_PROGRESS and not quest.can_complete(player):
 			$NPCQuestDialog.show_in_progress_quest(get_parent())
 	$NPCQuestDialog.show_no_quest(get_parent())
 

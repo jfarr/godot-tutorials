@@ -1,4 +1,4 @@
-extends Resource
+extends Task
 
 class_name KillTask
 
@@ -13,8 +13,11 @@ func collect_kill(mob):
 	if mob.resource.name == quest_mob.name and count < max_count:
 		count += 1
 
-func is_completed(_player):
+func can_complete(_player):
 	return count == max_count
 
-func turn_in(_player):
+func complete(_player):
 	pass
+
+func get_display_text():
+	return "Kill " + quest_mob.name

@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://bd0hj54cy6yq2"]
+
+[ext_resource type="PackedScene" uid="uid://epd7kartxpok" path="res://scenes/quest_hud_item.tscn" id="1_1sigb"]
+[ext_resource type="Script" path="res://scenes/quest_hud.gd" id="1_08dpt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ne8ve"]
+bg_color = Color(0.243137, 0.243137, 0.243137, 0.584314)
+
+[node name="QuestHUD" type="Node2D"]
+z_index = 4
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_08dpt")
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 150.0
+offset_bottom = 185.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ne8ve")
+
+[node name="GridContainer" type="GridContainer" parent="Panel"]
+custom_minimum_size = Vector2(150, 185)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Panel/GridContainer"]
+custom_minimum_size = Vector2(150, 23)
+layout_mode = 2
+text = "Quests"
+
+[node name="Quests" type="Node2D" parent="Panel/GridContainer"]
+
+[node name="Quest1" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 27.0
+offset_bottom = 50.0
+
+[node name="Quest2" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 54.0
+offset_bottom = 77.0
+
+[node name="Quest3" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 81.0
+offset_bottom = 104.0
+
+[node name="Quest4" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 108.0
+offset_bottom = 131.0
+
+[node name="Quest5" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 135.0
+offset_bottom = 158.0
+
+[node name="Quest6" parent="Panel/GridContainer/Quests" instance=ExtResource("1_1sigb")]
+offset_top = 162.0
+offset_bottom = 185.0

@@ -5,10 +5,12 @@ class_name NPCQuest
 signal quest_menu_opened
 signal quest_menu_closed
 
+var player = null
 var quest = null
 
-func show_quest(npc, quest):
+func show_quest(player, npc, quest):
 	quest_menu_opened.emit()
+	self.player = player
 	self.quest = quest
 	$Quest/Name.text = npc.npc_name
 	$Quest/Text.text = quest.text
@@ -42,7 +44,8 @@ func show_finish_quest(npc):
 func _on_yes_button_1_pressed():
 	$Quest.visible = false
 	if quest:
-		quest.start()
+		player.start_quest(quest)
+		#quest.start()
 	quest_menu_closed.emit()
 
 func _on_no_button_1_pressed():

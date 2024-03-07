@@ -5,6 +5,8 @@ enum PlayerState {
 	WALKING
 }
 
+#signal quests_updated(quests)
+
 @export var inventory : Inventory
 @onready var camera = $Camera2D
 
@@ -14,6 +16,11 @@ var bow_equipped = false
 var bow_cooldown = true
 var arrow_scene : PackedScene = preload("res://scenes/arrow.tscn")
 var mouse_direction = null
+
+var quest_list = QuestList.new()
+
+#func _ready():
+	#quests_updated.connect(get_parent()._on_quests_updated)
 
 func _physics_process(_delta):
 	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -82,9 +89,19 @@ func play_animation(direction):
 
 		$AnimatedSprite2D.play(animation_dir + "-" + animation)
 
+func _on_shoot_timer_timeout():
+	bow_cooldown = true
+
 func collect(object):
 	inventory.insert(object.item)
 	object.item.collect_item(object)
 
-func _on_shoot_timer_timeout():
-	bow_cooldown = true
+func start_quest(quest):
+	print("start quest: ", quest)
+	quest_list.start_quest(quest)
+	#quests_updated.emit(quest_list.quests)
+
+func complete_quest(quest):
+	print("complete quest: ", quest)
+	quest_list.complete_quest(self, quest)
+	#quests_updated.emit(quest_list.quests)

@@ -8,7 +8,8 @@ enum Status {
 	COMPLETE
 }
 
-signal quest_completed(quest : Quest)
+#signal quest_started(quest : Quest)
+#signal quest_completed(quest : Quest)
 
 @export var id : String = ""
 @export_multiline var text : String
@@ -17,6 +18,9 @@ signal quest_completed(quest : Quest)
 @export var prereqs : Array[Quest]
 @export var collection_tasks : Array[CollectionTask]
 @export var kill_tasks : Array[KillTask]
+
+#static func connect_quest_started(sink):
+	#quest_started.connect(sink)
 
 func can_start():
 	if status != Status.NOT_STARTED:
@@ -32,20 +36,24 @@ func start():
 	for task in kill_tasks:
 		task.start()
 	status = Status.IN_PROGRESS
+	#quest_started.emit(self)
 
-func is_completed(player):
+func can_complete(player):
 	for task in collection_tasks:
-		if !task.is_completed(player):
+		if !task.can_complete(player):
 			return false
 	for task in kill_tasks:
-		if !task.is_completed(player):
+		if !task.can_complete(player):
 			return false
 	return true
 
-func turn_in(player):
+func complete(player):
 	for task in collection_tasks:
-		task.turn_in(player)
+		task.complete(player)
 	for task in kill_tasks:
-		task.turn_in(player)
+		task.complete(player)
 	status = Status.COMPLETE
-	quest_completed.emit(self)
+	#quest_completed.emit(self)
+
+func get_tasks():
+	return collection_tasks + kill_tasks

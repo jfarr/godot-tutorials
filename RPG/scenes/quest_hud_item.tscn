@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://epd7kartxpok"]
+
+[ext_resource type="Script" path="res://scenes/quest_hud_item.gd" id="1_xrpwt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_enrap"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_l1s3t"]
+
+[node name="QuestHUDItem" type="Panel"]
+custom_minimum_size = Vector2(150, 23)
+offset_right = 150.0
+offset_bottom = 23.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_enrap")
+script = ExtResource("1_xrpwt")
+
+[node name="QuestLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_right = 75.0
+offset_bottom = 11.5
+grow_vertical = 2
+text = "Kill Slime "
+label_settings = SubResource("LabelSettings_l1s3t")
+
+[node name="ProgessLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "0/3"
+horizontal_alignment = 2

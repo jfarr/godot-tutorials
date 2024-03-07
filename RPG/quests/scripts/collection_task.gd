@@ -1,4 +1,4 @@
-extends Resource
+extends Task
 
 class_name CollectionTask
 
@@ -8,8 +8,11 @@ class_name CollectionTask
 func start():
 	pass
 
-func is_completed(player):
+func can_complete(player):
 	return player.inventory.contains_items(quest_item, max_count)
 
-func turn_in(player):
+func complete(player):
 	player.inventory.remove_items(quest_item, max_count)
+
+func get_display_text():
+	return "Collect " + quest_item.name
