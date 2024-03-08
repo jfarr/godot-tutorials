@@ -3,6 +3,7 @@ extends Node2D
 @export var color = ""
 @onready var sprite = get_node("Sprite2D")
 var matched = false
+var direction = null
 
 func _ready():
 	pass

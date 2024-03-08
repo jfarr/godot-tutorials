@@ -23,6 +23,7 @@ var state
 ]
 @onready var grey_dot = preload("res://Scenes/Dots/grey_dot.tscn")
 
+var slide_timer = Timer.new()
 var destroy_timer = Timer.new()
 var collapse_timer = Timer.new()
 var refill_timer = Timer.new()
@@ -48,6 +49,11 @@ func _ready():
 	spawn_dots()
 	
 func setup_timers():
+	slide_timer.connect("timeout", Callable(self, "slide_dots"))
+	slide_timer.set_one_shot(true)
+	slide_timer.set_wait_time(0.2)
+	add_child(slide_timer)
+	
 	destroy_timer.connect("timeout", Callable(self, "destroy_matches"))
 	destroy_timer.set_one_shot(true)
 	destroy_timer.set_wait_time(0.2)
@@ -83,7 +89,8 @@ func make_2d_array():
 func spawn_dots():
 	for i in width:
 		for j in height:
-			if !in_corner(i, j) and (!in_center(i, j) or anchor_fill(Vector2(i, j))):
+			var pos = Vector2(i, j)
+			if !in_corner(pos) and (!in_center(pos) or anchor_fill(pos)):
 				var rand = floor(randf_range(0, possible_dots.size()))
 				var dot = possible_dots[rand].instantiate()
 				var loops = 0
@@ -95,11 +102,11 @@ func spawn_dots():
 				dot.position = grid_to_pixel(i, j)
 				all_dots[i][j] = dot
 
-func in_corner(i, j):
-	return (i < side_rows or i >= width - side_rows) and (j < side_rows or j >= height - side_rows)
+func in_corner(pos : Vector2):
+	return (pos.x < side_rows or pos.x >= width - side_rows) and (pos.y < side_rows or pos.y >= height - side_rows)
 
-func in_center(i, j):
-	return i >= side_rows and i < width - side_rows and j >= side_rows and j < height - side_rows
+func in_center(pos : Vector2):
+	return pos.x >= side_rows and pos.x < width - side_rows and pos.y >= side_rows and pos.y < height - side_rows
 
 func match_at(i, j, color):
 	if i > 1:
@@ -138,34 +145,43 @@ func touch_input():
 			controlling = false
 			final_touch = pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y )
 			touch_difference(first_touch, final_touch)
-			
+
 func swap_dots(column, row, direction):
-	if !can_swap(column, row, direction):
-		return
 	var first_dot = all_dots[column][row]
 	var other_dot = all_dots[column + direction.x][row + direction.y]
-	if first_dot != null && (other_dot != null or in_center(column + direction.x, row + direction.y)):
-		store_info(first_dot, other_dot, Vector2(column, row), direction)
+	if first_dot != null and !in_center(Vector2(column, row)) \
+		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
+		store_info(first_dot, null, Vector2(column, row), direction)
 		state = wait
-		all_dots[column][row] = other_dot
+		#all_dots[column][row] = other_dot
+		first_dot.direction = direction
 		all_dots[column + direction.x][row + direction.y] = first_dot
 		first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
-		if other_dot:
-			other_dot.move(grid_to_pixel(column, row))
-		if !move_checked:
-			find_matches()
+		#if other_dot:
+			#other_dot.move(grid_to_pixel(column, row))
+		#if !move_checked:
+			#find_matches()
+		slide_dots()
 
-func can_swap(column, row, direction):
-	print("can swap %s, %s > %s" % [column, row, direction])
-	print("start in center: ", in_center(column, row))
-	print("end in center: ", in_center(column + direction.x, row + direction.y))
-	return !in_center(column, row) and in_center(column + direction.x, row + direction.y)
+func slide_dots():
+	print("sliding dots")
+	var dot_pos = last_place + last_direction
+	print("dot pos: ", dot_pos)
+	if all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] == null:
+		all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = dot_one
+		all_dots[dot_pos.x][dot_pos.y] = null
+		dot_one.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+		store_info(dot_one, null, Vector2(dot_pos.x, dot_pos.y), last_direction)
+		slide_timer.start()
+	else:
+		state = move
+		move_checked = false
 
-func store_info(first_dot, other_dot, place, direciton):
+func store_info(first_dot, other_dot, place, direction):
 	dot_one = first_dot
-	dot_two = other_dot
+	#dot_two = other_dot
 	last_place = place
-	last_direction = direciton
+	last_direction = direction
 	pass
 		
 func swap_back():
@@ -237,7 +253,7 @@ func destroy_matches():
 func collapse_columns():
 	for i in width:
 		for j in height:
-			if all_dots[i][j] == null && !in_corner(i,j):
+			if all_dots[i][j] == null && !in_corner(Vector2(i,j)):
 				for k in range(j + 1, height):
 					if all_dots[i][k] != null:
 						all_dots[i][k].move(grid_to_pixel(i, j))
@@ -249,7 +265,7 @@ func collapse_columns():
 func refill_columns():
 	for i in width:
 		for j in height:
-			if all_dots[i][j] == null && !in_corner(i,j):
+			if all_dots[i][j] == null && !in_corner(Vector2(i,j)):
 				var rand = floor(randf_range(0, possible_dots.size()))
 				var dot = possible_dots[rand].instantiate()
 				var loops = 0
