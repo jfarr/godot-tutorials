@@ -14,7 +14,7 @@ x fetch quests remove items from inventory
 x respawn items (sticks)
 x respawn mobs
 x bounding box on wandering mobs
-- quest HUD
+x quest HUD
  
 - mob navigation
 - loot tables

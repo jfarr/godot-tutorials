@@ -107,6 +107,5 @@ func complete_quest(quest):
 	quests_updated.emit(quest_list.quests)
 
 func _on_mob_killed(mob):
-	print("mob killed: ", mob)
 	await get_tree().create_timer(0.5).timeout
 	quests_updated.emit(quest_list.quests)
