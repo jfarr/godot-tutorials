@@ -169,12 +169,12 @@ func swap_dots(column, row, direction):
 		slide_dots()
 
 func slide_dots():
-	print("sliding dots")
+	#print("sliding dots")
 	var dot_pos = last_place + last_direction
-	print("dot pos: ", dot_pos)
-	print("first pos: ", first_place)
+	#print("dot pos: ", dot_pos)
+	#print("first pos: ", first_place)
 	if !in_center(Vector2(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y)):
-		print("hit side")
+		#print("hit side")
 		if bounce_behavior == Bounce.disallow:
 			swap_back()
 		elif bounce_behavior == Bounce.discard:
@@ -182,13 +182,14 @@ func slide_dots():
 			all_dots[dot_pos.x][dot_pos.y].queue_free()
 			all_dots[dot_pos.x][dot_pos.y] = null
 		elif bounce_behavior == Bounce.keep:
-			all_dots[dot_pos.x][dot_pos.y] = null
-			var first_dot = dot_one
-			var second_dot = all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y]
-			all_dots[first_place.x][first_place.y] = second_dot
-			all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = first_dot
-			first_dot.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
-			second_dot.move(grid_to_pixel(first_place.x, first_place.y))
+			swap_across(dot_pos)
+			#all_dots[dot_pos.x][dot_pos.y] = null
+			#var first_dot = dot_one
+			#var second_dot = all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y]
+			#all_dots[first_place.x][first_place.y] = second_dot
+			#all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = first_dot
+			#first_dot.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+			#second_dot.move(grid_to_pixel(first_place.x, first_place.y))
 		state = move
 		move_checked = false
 	else:
@@ -207,7 +208,15 @@ func store_info(first_dot, first_place, place, direction):
 	self.first_place = first_place
 	last_place = place
 	last_direction = direction
-	pass
+
+func swap_across(dot_pos):
+	all_dots[dot_pos.x][dot_pos.y] = null
+	var first_dot = dot_one
+	var second_dot = all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y]
+	all_dots[first_place.x][first_place.y] = second_dot
+	all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = first_dot
+	first_dot.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+	second_dot.move(grid_to_pixel(first_place.x, first_place.y))
 
 func swap_back():
 	if dot_one != null:
