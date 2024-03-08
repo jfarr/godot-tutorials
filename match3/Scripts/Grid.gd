@@ -3,6 +3,9 @@ extends Node2D
 enum {wait, move}
 var state
 
+enum Bounce {disallow, discard, keep}
+@export var bounce_behavior : Bounce
+
 @export var width: int
 @export var height: int
 @export var side_rows: int
@@ -32,6 +35,7 @@ var all_dots = []
 
 var dot_one = null
 var dot_two = null
+var first_place = Vector2(0,0)
 var last_place = Vector2(0,0)
 var last_direction = Vector2(0,0)
 var move_checked = false
@@ -151,11 +155,12 @@ func swap_dots(column, row, direction):
 	var other_dot = all_dots[column + direction.x][row + direction.y]
 	if first_dot != null and !in_center(Vector2(column, row)) \
 		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
-		store_info(first_dot, null, Vector2(column, row), direction)
+		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
 		#all_dots[column][row] = other_dot
 		first_dot.direction = direction
 		all_dots[column + direction.x][row + direction.y] = first_dot
+		all_dots[column][row] = null
 		first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
 		#if other_dot:
 			#other_dot.move(grid_to_pixel(column, row))
@@ -167,28 +172,48 @@ func slide_dots():
 	print("sliding dots")
 	var dot_pos = last_place + last_direction
 	print("dot pos: ", dot_pos)
-	if all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] == null:
-		all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = dot_one
-		all_dots[dot_pos.x][dot_pos.y] = null
-		dot_one.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
-		store_info(dot_one, null, Vector2(dot_pos.x, dot_pos.y), last_direction)
-		slide_timer.start()
-	else:
+	print("first pos: ", first_place)
+	if !in_center(Vector2(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y)):
+		print("hit side")
+		if bounce_behavior == Bounce.disallow:
+			swap_back()
+		elif bounce_behavior == Bounce.discard:
+			all_dots[dot_pos.x][dot_pos.y].dim()
+			all_dots[dot_pos.x][dot_pos.y].queue_free()
+			all_dots[dot_pos.x][dot_pos.y] = null
+		elif bounce_behavior == Bounce.keep:
+			all_dots[dot_pos.x][dot_pos.y] = null
+			var first_dot = dot_one
+			var second_dot = all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y]
+			all_dots[first_place.x][first_place.y] = second_dot
+			all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = first_dot
+			first_dot.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+			second_dot.move(grid_to_pixel(first_place.x, first_place.y))
 		state = move
 		move_checked = false
+	else:
+		if all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] == null:
+			all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = dot_one
+			all_dots[dot_pos.x][dot_pos.y] = null
+			dot_one.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+			store_info(dot_one, first_place, Vector2(dot_pos.x, dot_pos.y), last_direction)
+			slide_timer.start()
+		else:
+			state = move
+			move_checked = false
 
-func store_info(first_dot, other_dot, place, direction):
+func store_info(first_dot, first_place, place, direction):
 	dot_one = first_dot
-	#dot_two = other_dot
+	self.first_place = first_place
 	last_place = place
 	last_direction = direction
 	pass
-		
+
 func swap_back():
-	if dot_one != null && dot_two != null:
-		swap_dots(last_place.x, last_place.y, last_direction)
-	state = move
-	move_checked = false
+	if dot_one != null:
+		all_dots[first_place.x][first_place.y] = dot_one
+		all_dots[last_place.x + last_direction.x][last_place.y + last_direction.y] = null
+		dot_one.move(grid_to_pixel(first_place.x, first_place.y))
 	
 func touch_difference(grid_1, grid_2):
 	var difference = grid_2 - grid_1
