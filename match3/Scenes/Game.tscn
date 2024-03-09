@@ -13,9 +13,9 @@ color = Color(0, 0, 0, 1)
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource("1")
 bounce_behavior = 2
-width = 9
-height = 9
-side_rows = 2
+width = 13
+height = 13
+side_rows = 3
 offset = 70
 y_offset = -2
-anchor_spaces = PackedVector2Array(3, 5, 4, 4, 4, 3)
+anchor_spaces = PackedVector2Array(5, 7, 6, 6, 6, 5)
