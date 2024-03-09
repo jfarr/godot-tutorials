@@ -192,14 +192,16 @@ func is_in_grid(grid_position):
 
 func touch_input():
 	if Input.is_action_just_pressed("ui_touch"):
-		if is_in_grid(pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y)):
-			first_touch = pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y)
-			controlling = true
-	if Input.is_action_just_released("ui_touch"):
-		if is_in_grid(pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y)) && controlling:
-			controlling = false
-			final_touch = pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y )
-			touch_difference(first_touch, final_touch)
+		var touch = pixel_to_grid(get_global_mouse_position().x,get_global_mouse_position().y)
+		if is_in_grid(touch):
+			if touch.x == side_rows - 1 and touch.y >= side_rows and touch.y < height - side_rows:
+				swap_dots(touch.x, touch.y, Vector2(1, 0))
+			elif touch.x == width - side_rows and touch.y >= side_rows and touch.y < height - side_rows:
+				swap_dots(touch.x, touch.y, Vector2(-1, 0))
+			elif touch.y == side_rows - 1 and touch.x >= side_rows and touch.x < width - side_rows:
+				swap_dots(touch.x, touch.y, Vector2(0, 1))
+			elif touch.y == width - side_rows and touch.x >= side_rows and touch.x < width - side_rows:
+				swap_dots(touch.x, touch.y, Vector2(0, -1))
 
 func swap_dots(column, row, direction):
 	var first_dot = all_dots[column][row]
@@ -208,7 +210,6 @@ func swap_dots(column, row, direction):
 		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
 		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
-		#first_dot.direction = direction
 		all_dots[column + direction.x][row + direction.y] = first_dot
 		all_dots[column][row] = null
 		first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
@@ -277,7 +278,7 @@ func touch_difference(grid_1, grid_2):
 func _process(_delta):
 	if state == move:
 		touch_input()
-	
+
 func find_matches():
 	for i in range(side_rows, width - side_rows):
 		for j in range(side_rows, height - side_rows):
