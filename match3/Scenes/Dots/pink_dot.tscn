@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://d0bsiknlebs18" path="res://Scenes/Dot.tscn" id="2"]
 
 [node name="pink_dot" instance=ExtResource("2")]
-scale = Vector2(0.4, 0.4)
 color = "pink"
 
 [node name="Sprite2D" parent="." index="0"]

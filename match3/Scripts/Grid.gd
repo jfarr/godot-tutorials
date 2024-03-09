@@ -1,9 +1,11 @@
 extends Node2D
 
+signal level_complete
 signal game_over
 
 enum {wait, move}
 var state
+var level = 0
 
 enum Bounce {disallow, discard, keep}
 @export var bounce_behavior : Bounce
@@ -49,12 +51,26 @@ var final_touch = Vector2(0,0)
 var controlling = false
 
 func _ready():
-	state = move
+	#state = move
 	setup_timers()
 	randomize()
 	all_dots = make_2d_array()
+	#spawn_dots()
+	next_level()
+
+func next_level():
+	level += 1
+	reset()
 	spawn_dots()
-	
+	state = move
+
+func reset():
+	for i in width:
+		for j in height:
+			if all_dots[i][j]:
+				all_dots[i][j].queue_free()
+				all_dots[i][j] = null
+
 func setup_timers():
 	slide_timer.connect("timeout", Callable(self, "slide_dots"))
 	slide_timer.set_one_shot(true)
@@ -435,10 +451,10 @@ func refill_columns():
 			dot.position = grid_to_pixel(i + y_offset, j)
 			dot.move(grid_to_pixel(i,j))
 			all_dots[i][j] = dot
-	check_end()
+	check_complete()
 
-func check_end():
+func check_complete():
 	if has_anchors():
 		state = move
 	else:
-		game_over.emit()
+		level_complete.emit()
