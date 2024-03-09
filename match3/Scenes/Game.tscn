@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://ynpouyser6kn"]
+[gd_scene load_steps=3 format=3 uid="uid://ynpouyser6kn"]
 
 [ext_resource type="Script" path="res://Scripts/Grid.gd" id="1"]
+[ext_resource type="Script" path="res://Scenes/Game.gd" id="1_ic05t"]
 
 [node name="Game" type="Node"]
+script = ExtResource("1_ic05t")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -13,9 +15,20 @@ color = Color(0, 0, 0, 1)
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource("1")
 bounce_behavior = 2
-width = 13
-height = 13
+width = 16
+height = 16
 side_rows = 3
-offset = 70
+offset = 60
 y_offset = -1
 anchor_spaces = PackedVector2Array(5, 7, 6, 6, 6, 5)
+
+[node name="GameOver" type="Node2D" parent="."]
+
+[node name="GameOverText" type="RichTextLabel" parent="GameOver"]
+offset_right = 960.0
+offset_bottom = 960.0
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "[center]GAME OVER[/center]"
+
+[connection signal="game_over" from="Grid" to="." method="_on_grid_game_over"]

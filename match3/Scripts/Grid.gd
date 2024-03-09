@@ -1,5 +1,7 @@
 extends Node2D
 
+signal game_over
+
 enum {wait, move}
 var state
 
@@ -28,6 +30,7 @@ enum Bounce {disallow, discard, keep}
 
 var slide_timer = Timer.new()
 var destroy_timer = Timer.new()
+var unanchored_timer = Timer.new()
 var collapse_timer = Timer.new()
 var refill_timer = Timer.new()
 
@@ -63,6 +66,11 @@ func setup_timers():
 	destroy_timer.set_wait_time(0.2)
 	add_child(destroy_timer)
 	
+	unanchored_timer.connect("timeout", Callable(self, "destroy_unanchored"))
+	unanchored_timer.set_one_shot(true)
+	unanchored_timer.set_wait_time(0.2)
+	add_child(unanchored_timer)
+	
 	collapse_timer.connect("timeout", Callable(self, "collapse_columns"))
 	collapse_timer.set_one_shot(true)
 	collapse_timer.set_wait_time(0.2)
@@ -72,9 +80,47 @@ func setup_timers():
 	refill_timer.set_one_shot(true)
 	refill_timer.set_wait_time(0.2)
 	add_child(refill_timer)
-	
-func anchor_fill(place):
+
+func is_anchor(place):
+	return all_dots[place.x][place.y] and all_dots[place.x][place.y].anchor
+
+func is_anchor_space(place):
 	return is_in_array(anchor_spaces, place)
+
+func find_regions():
+	var regions = []
+	var checked = {}
+	for i in range(side_rows, width - side_rows):
+		for j in range(side_rows, height - side_rows):
+			if checked.has(Vector2(i, j)):
+				continue
+			var region = []
+			find_region(checked, region, i, j)
+			if region.size() > 0:
+				regions.append(region)
+	return regions
+
+func find_region(checked, region, i, j):
+	if checked.has(Vector2(i, j)):
+		return
+	checked[Vector2(i, j)] = 1
+	if all_dots[i][j] == null:
+		return
+	region.append(Vector2(i, j))
+	if i < width - side_rows - 1:
+		find_region(checked, region, i + 1, j)
+	if i > side_rows:
+		find_region(checked, region, i - 1, j)
+	if j < height - side_rows - 1:
+		find_region(checked, region, i, j + 1)
+	if j > side_rows:
+		find_region(checked, region, i, j - 1)
+
+func has_anchors():
+	for place in anchor_spaces:
+		if all_dots[place.x][place.y]:
+			return true
+	return false 
 
 func is_in_array(array, item):
 	for i in array.size():
@@ -94,7 +140,7 @@ func spawn_dots():
 	for i in width:
 		for j in height:
 			var pos = Vector2(i, j)
-			if !in_corner(pos) and (!in_center(pos) or anchor_fill(pos)):
+			if !in_corner(pos) and (!in_center(pos) or is_anchor_space(pos)):
 				var rand = floor(randf_range(0, possible_dots.size()))
 				var dot = possible_dots[rand].instantiate()
 				var loops = 0
@@ -102,9 +148,14 @@ func spawn_dots():
 					rand = floor(randf_range(0,possible_dots.size()))
 					loops += 1
 					dot = possible_dots[rand].instantiate()
-				add_child(dot)
 				dot.position = grid_to_pixel(i, j)
+				if is_anchor_space(pos):
+					dot.anchor = true
+				add_child(dot)
 				all_dots[i][j] = dot
+	for pos in anchor_spaces:
+		var anchor_dot = all_dots[pos.x][pos.y]
+		anchor_dot.show_marker()
 
 func in_corner(pos : Vector2):
 	return (pos.x < side_rows or pos.x >= width - side_rows) and (pos.y < side_rows or pos.y >= height - side_rows)
@@ -127,7 +178,7 @@ func grid_to_pixel(column, row):
 	var new_x = x_start + offset * column
 	var new_y = y_start + -offset * row
 	return Vector2(new_x, new_y)
-	
+
 func pixel_to_grid(pixel_x,pixel_y):
 	var new_x = round((pixel_x - x_start) / offset)
 	var new_y = round((pixel_y - y_start) / -offset)
@@ -157,7 +208,7 @@ func swap_dots(column, row, direction):
 		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
 		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
-		first_dot.direction = direction
+		#first_dot.direction = direction
 		all_dots[column + direction.x][row + direction.y] = first_dot
 		all_dots[column][row] = null
 		first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
@@ -176,8 +227,6 @@ func slide_dots():
 		elif bounce_behavior == Bounce.keep:
 			swap_across(dot_pos)
 		# stop sliding
-		state = move
-		move_checked = false
 		find_matches()
 	else:
 		# else if no dot in the next slot then slide
@@ -189,9 +238,6 @@ func slide_dots():
 			slide_timer.start()
 		else:
 			# stop sliding
-			state = move
-			move_checked = false
-			dot_one.show_arrow()
 			find_matches()
 
 func store_info(first_dot, first_place, place, direction):
@@ -249,6 +295,30 @@ func find_matches():
 							match_and_dim(all_dots[i][j - 1])
 							match_and_dim(all_dots[i][j])
 							match_and_dim(all_dots[i][j + 1])
+				if j > side_rows and i < width - side_rows - 1:
+					if !is_piece_null(i, j - 1) and !is_piece_null(i + 1, j):
+						if all_dots[i][j - 1].color == current_color && all_dots[i + 1][j].color == current_color:
+							match_and_dim(all_dots[i][j - 1])
+							match_and_dim(all_dots[i][j])
+							match_and_dim(all_dots[i + 1][j])
+				if i > side_rows and j < width - side_rows - 1:
+					if !is_piece_null(i - 1, j) and !is_piece_null(i, j + 1):
+						if all_dots[i - 1][j].color == current_color && all_dots[i][j + 1].color == current_color:
+							match_and_dim(all_dots[i - 1][j])
+							match_and_dim(all_dots[i][j])
+							match_and_dim(all_dots[i][j + 1])
+				if j < height - side_rows - 1 and i < width - side_rows - 1:
+					if !is_piece_null(i, j + 1) and !is_piece_null(i + 1, j):
+						if all_dots[i][j + 1].color == current_color && all_dots[i + 1][j].color == current_color:
+							match_and_dim(all_dots[i][j + 1])
+							match_and_dim(all_dots[i][j])
+							match_and_dim(all_dots[i + 1][j])
+				if j > side_rows and i > side_rows:
+					if !is_piece_null(i, j - 1) and !is_piece_null(i - 1, j):
+						if all_dots[i][j - 1].color == current_color && all_dots[i - 1][j].color == current_color:
+							match_and_dim(all_dots[i][j - 1])
+							match_and_dim(all_dots[i][j])
+							match_and_dim(all_dots[i - 1][j])
 	destroy_timer.start()
 
 func is_piece_null(column, row):
@@ -270,12 +340,24 @@ func destroy_matches():
 					all_dots[i][j].queue_free()
 					all_dots[i][j] = null
 	move_checked = true
+	unanchored_timer.start()
+
+func destroy_unanchored():
+	var regions = find_regions()
+	for region in regions:
+		var has_anchor = false
+		for place in region:
+			if is_anchor(place):
+				has_anchor = true
+				break
+		if !has_anchor:
+			for place in region:
+				var dot = all_dots[place.x][place.y]
+				match_and_dim(dot)
+				dot.queue_free()
+				all_dots[place.x][place.y] = null
 	collapse_timer.start()
-	#if was_matched:
-		#collapse_timer.start()
-	#else:
-		#swap_back()
-					
+
 func collapse_columns():
 	for i in range(side_rows, width - side_rows):
 		for j in range(side_rows-1, 0, -1):
@@ -352,30 +434,10 @@ func refill_columns():
 			dot.position = grid_to_pixel(i + y_offset, j)
 			dot.move(grid_to_pixel(i,j))
 			all_dots[i][j] = dot
+	check_end()
 
-	#for i in width:
-		#for j in height:
-			#if all_dots[i][j] == null && !in_corner(Vector2(i,j)):
-				#var rand = floor(randf_range(0, possible_dots.size()))
-				#var dot = possible_dots[rand].instantiate()
-				#var loops = 0
-				#while (match_at(i, j, dot.color) && loops < 100):
-					#rand = floor(randf_range(0,possible_dots.size()))
-					#loops += 1
-					#dot = possible_dots[rand].instantiate()
-				#add_child(dot)
-				#dot.position = grid_to_pixel(i, j - y_offset)
-				#dot.move(grid_to_pixel(i,j))
-				#all_dots[i][j] = dot
-	#after_refill()
-
-func after_refill():
-	for i in width:
-		for j in height:
-			if all_dots[i][j] != null:
-				if match_at(i, j, all_dots[i][j].color):
-					find_matches()
-					destroy_timer.start()
-					return
-	state = move
-	move_checked = false
+func check_end():
+	if has_anchors():
+		state = move
+	else:
+		game_over.emit()
