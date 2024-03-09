@@ -17,5 +17,5 @@ width = 13
 height = 13
 side_rows = 3
 offset = 70
-y_offset = -2
+y_offset = -1
 anchor_spaces = PackedVector2Array(5, 7, 6, 6, 6, 5)

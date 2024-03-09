@@ -313,27 +313,61 @@ func collapse_columns():
 						all_dots[i][j] = all_dots[k][j]
 						all_dots[k][j] = null
 						break
+	refill_timer.start()
 
 func refill_columns():
 	for i in range(side_rows, width - side_rows):
-		for j in range(0, side_rows):
-			if all_dots[i][j] == null:
-				pass
-	for i in width:
-		for j in height:
-			if all_dots[i][j] == null && !in_corner(Vector2(i,j)):
-				var rand = floor(randf_range(0, possible_dots.size()))
-				var dot = possible_dots[rand].instantiate()
-				var loops = 0
-				while (match_at(i, j, dot.color) && loops < 100):
-					rand = floor(randf_range(0,possible_dots.size()))
-					loops += 1
-					dot = possible_dots[rand].instantiate()
-				add_child(dot)
-				dot.position = grid_to_pixel(i, j - y_offset)
-				dot.move(grid_to_pixel(i,j))
-				all_dots[i][j] = dot
-	after_refill()
+		var j = height - 1
+		if all_dots[i][j] == null:
+			var rand = floor(randf_range(0, possible_dots.size()))
+			var dot = possible_dots[rand].instantiate()
+			add_child(dot)
+			dot.position = grid_to_pixel(i, j - y_offset)
+			dot.move(grid_to_pixel(i,j))
+			all_dots[i][j] = dot
+	for i in range(side_rows, width - side_rows):
+		var j = 0
+		if all_dots[i][j] == null:
+			var rand = floor(randf_range(0, possible_dots.size()))
+			var dot = possible_dots[rand].instantiate()
+			add_child(dot)
+			dot.position = grid_to_pixel(i, j + y_offset)
+			dot.move(grid_to_pixel(i,j))
+			all_dots[i][j] = dot
+	for j in range(side_rows, height - side_rows):
+		var i = width - 1
+		if all_dots[i][j] == null:
+			var rand = floor(randf_range(0, possible_dots.size()))
+			var dot = possible_dots[rand].instantiate()
+			add_child(dot)
+			dot.position = grid_to_pixel(i - y_offset, j)
+			dot.move(grid_to_pixel(i,j))
+			all_dots[i][j] = dot
+	for j in range(side_rows, height - side_rows):
+		var i = 0
+		if all_dots[i][j] == null:
+			var rand = floor(randf_range(0, possible_dots.size()))
+			var dot = possible_dots[rand].instantiate()
+			add_child(dot)
+			dot.position = grid_to_pixel(i + y_offset, j)
+			dot.move(grid_to_pixel(i,j))
+			all_dots[i][j] = dot
+
+	#for i in width:
+		#for j in height:
+			#if all_dots[i][j] == null && !in_corner(Vector2(i,j)):
+				#var rand = floor(randf_range(0, possible_dots.size()))
+				#var dot = possible_dots[rand].instantiate()
+				#var loops = 0
+				#while (match_at(i, j, dot.color) && loops < 100):
+					#rand = floor(randf_range(0,possible_dots.size()))
+					#loops += 1
+					#dot = possible_dots[rand].instantiate()
+				#add_child(dot)
+				#dot.position = grid_to_pixel(i, j - y_offset)
+				#dot.move(grid_to_pixel(i,j))
+				#all_dots[i][j] = dot
+	#after_refill()
 
 func after_refill():
 	for i in width:
