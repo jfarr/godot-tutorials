@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b7xynvdd76ny1"]
+
+[node name="Arrow" type="CanvasLayer"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(30, 0, -15, -30, -15, 30)

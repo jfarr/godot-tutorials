@@ -202,6 +202,7 @@ func slide_dots():
 		else:
 			state = move
 			move_checked = false
+			dot_one.show_arrow()
 
 func store_info(first_dot, first_place, place, direction):
 	dot_one = first_dot
