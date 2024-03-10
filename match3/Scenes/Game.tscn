@@ -65,5 +65,6 @@ text = "UNDO"
 
 [connection signal="game_over" from="Grid" to="." method="_on_grid_game_over"]
 [connection signal="level_complete" from="Grid" to="." method="_on_grid_level_complete"]
+[connection signal="moved" from="Grid" to="." method="_on_grid_moved"]
 [connection signal="pressed" from="HUD/ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="pressed" from="HUD/UndoButton" to="." method="_on_undo_button_pressed"]

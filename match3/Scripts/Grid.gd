@@ -1,5 +1,6 @@
 extends Node2D
 
+signal moved
 signal level_complete
 signal game_over
 
@@ -238,6 +239,7 @@ func swap_dots(column, row, direction):
 		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
 		slide_dots()
+		moved.emit()
 
 func slide_dots():
 	var start_pos = last_place
@@ -299,6 +301,7 @@ func undo_move():
 		clear_board(all_dots)
 		copy_board(last_move, all_dots)
 		sync_board()
+		moved.emit()
 
 func copy_board(src, dest):
 	for i in width:
