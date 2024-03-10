@@ -4,7 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://bdyw1xgg7p10e" path="res://Assets/Dots/grey.png" id="2_6x7rp"]
 
 [node name="grey_dot" instance=ExtResource("1_qea1a")]
-color = "yellow"
+color = "grey"
 
 [node name="Sprite2D" parent="." index="0"]
 texture = ExtResource("2_6x7rp")
+
+[node name="Polygon2D" type="Polygon2D" parent="." index="1"]
+polygon = PackedVector2Array(40, 0, 0, -40, -40, 0, 0, 40)

@@ -9,6 +9,7 @@ var level = 0
 
 enum Bounce {disallow, discard, keep}
 @export var bounce_behavior : Bounce
+@export var max_anchors = 20
 
 @export var width: int
 @export var height: int
@@ -21,14 +22,14 @@ enum Bounce {disallow, discard, keep}
 
 @export var anchor_spaces: PackedVector2Array
 
-@onready var possible_dots = [
+@onready var all_possible_dots = [
 	preload("res://Scenes/Dots/blue_dot.tscn"),
 	preload("res://Scenes/Dots/green_dot.tscn"),
-	preload("res://Scenes/Dots/pink_dot.tscn"),
 	preload("res://Scenes/Dots/red_dot.tscn"),
 	preload("res://Scenes/Dots/yellow_dot.tscn"),
+	preload("res://Scenes/Dots/pink_dot.tscn"),
+	preload("res://Scenes/Dots/grey_dot.tscn"),
 ]
-@onready var grey_dot = preload("res://Scenes/Dots/grey_dot.tscn")
 
 var slide_timer = Timer.new()
 var destroy_timer = Timer.new()
@@ -37,32 +38,23 @@ var collapse_timer = Timer.new()
 var refill_timer = Timer.new()
 
 var all_dots = []
+var possible_dots
+var num_colors : int
 
 var dot_one = null
 var dot_two = null
 var first_place = Vector2(0,0)
 var last_place = Vector2(0,0)
 var last_direction = Vector2(0,0)
-var move_checked = false
-
-
-var first_touch = Vector2(0,0)
-var final_touch = Vector2(0,0)
-var controlling = false
 
 func _ready():
-	#state = move
 	setup_timers()
 	randomize()
 	all_dots = make_2d_array()
-	#spawn_dots()
-	next_level()
 
 func next_level():
 	level += 1
 	reset()
-	spawn_dots()
-	state = move
 
 func reset():
 	for i in width:
@@ -70,6 +62,23 @@ func reset():
 			if all_dots[i][j]:
 				all_dots[i][j].queue_free()
 				all_dots[i][j] = null
+	num_colors = 3 + (level - 1) / 4
+	possible_dots = all_possible_dots.slice(0, num_colors)
+	select_anchors()
+	spawn_dots()
+	state = move
+
+func select_anchors():
+	var num_anchors = min(max_anchors, level + 2)
+	anchor_spaces = []
+	var count = 0
+	while count < num_anchors:
+		var i = randi_range(side_rows + 1, width - side_rows - 2)
+		var j = randi_range(side_rows + 1, height - side_rows - 2)
+		var pos = Vector2(i, j)
+		if !is_in_array(anchor_spaces, pos):
+			anchor_spaces.append(pos)
+			count += 1
 
 func setup_timers():
 	slide_timer.connect("timeout", Callable(self, "slide_dots"))
@@ -356,7 +365,6 @@ func destroy_matches():
 					was_matched = true
 					all_dots[i][j].queue_free()
 					all_dots[i][j] = null
-	move_checked = true
 	unanchored_timer.start()
 
 func destroy_unanchored():

@@ -41,12 +41,19 @@ bbcode_enabled = true
 text = "[center]Good Job![/center]"
 
 [node name="ContinueButton" type="Button" parent="HUD"]
-offset_left = 274.0
-offset_top = 554.0
-offset_right = 695.0
-offset_bottom = 672.0
-theme_override_font_sizes/font_size = 75
+offset_left = 295.0
+offset_top = 530.0
+offset_right = 675.0
+offset_bottom = 630.0
+theme_override_font_sizes/font_size = 60
 text = "CONTINUE"
+
+[node name="LevelText" type="RichTextLabel" parent="HUD"]
+offset_right = 960.0
+offset_bottom = 72.0
+theme_override_font_sizes/normal_font_size = 45
+bbcode_enabled = true
+text = "[center]Level 99[/center]"
 
 [connection signal="game_over" from="Grid" to="." method="_on_grid_game_over"]
 [connection signal="level_complete" from="Grid" to="." method="_on_grid_level_complete"]
