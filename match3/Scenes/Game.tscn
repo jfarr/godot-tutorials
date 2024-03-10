@@ -14,7 +14,7 @@ color = Color(0, 0, 0, 1)
 
 [node name="Grid" type="Node2D" parent="."]
 script = ExtResource("1")
-bounce_behavior = 2
+bounce_behavior = 1
 width = 16
 height = 16
 side_rows = 3

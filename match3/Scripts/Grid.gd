@@ -31,7 +31,7 @@ enum Bounce {disallow, discard, keep}
 	preload("res://Scenes/Dots/grey_dot.tscn"),
 ]
 
-var slide_timer = Timer.new()
+var swap_timer = Timer.new()
 var destroy_timer = Timer.new()
 var unanchored_timer = Timer.new()
 var collapse_timer = Timer.new()
@@ -81,11 +81,11 @@ func select_anchors():
 			count += 1
 
 func setup_timers():
-	slide_timer.connect("timeout", Callable(self, "slide_dots"))
-	slide_timer.set_one_shot(true)
-	slide_timer.set_wait_time(0.1)
-	add_child(slide_timer)
-	
+	swap_timer.connect("timeout", Callable(self, "swap_back"))
+	swap_timer.set_one_shot(true)
+	swap_timer.set_wait_time(0.2)
+	add_child(swap_timer)
+
 	destroy_timer.connect("timeout", Callable(self, "destroy_matches"))
 	destroy_timer.set_one_shot(true)
 	destroy_timer.set_wait_time(0.2)
@@ -235,36 +235,37 @@ func swap_dots(column, row, direction):
 		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
 		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
-		all_dots[column + direction.x][row + direction.y] = first_dot
-		all_dots[column][row] = null
-		first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
+		#all_dots[column + direction.x][row + direction.y] = first_dot
+		#all_dots[column][row] = null
+		#first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
 		slide_dots()
 
 func slide_dots():
-	var dot_pos = last_place + last_direction
-	# if the dot hits the other side
-	if !in_center(Vector2(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y)):
+	var start_pos = last_place
+	var dot_pos = start_pos + last_direction
+	var next_pos = dot_pos + last_direction
+	while in_center(next_pos) and all_dots[next_pos.x][next_pos.y] == null:
+		dot_pos = next_pos
+		next_pos = dot_pos + last_direction
+	if !in_center(next_pos):
 		if bounce_behavior == Bounce.disallow:
-			swap_back()
+			dot_one.move(grid_to_pixel(dot_pos.x, dot_pos.y))
+			store_info(dot_one, start_pos, dot_pos, last_direction)
+			swap_timer.start()
 		elif bounce_behavior == Bounce.discard:
-			all_dots[dot_pos.x][dot_pos.y].dim()
-			all_dots[dot_pos.x][dot_pos.y].queue_free()
-			all_dots[dot_pos.x][dot_pos.y] = null
+			all_dots[start_pos.x][start_pos.y].dim()
+			all_dots[start_pos.x][start_pos.y].queue_free()
+			all_dots[start_pos.x][start_pos.y] = null
+			collapse_timer.start()
 		elif bounce_behavior == Bounce.keep:
-			swap_across(dot_pos)
-		# stop sliding
-		find_matches()
-	else:
-		# else if no dot in the next slot then slide
-		if all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] == null:
-			all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = dot_one
-			all_dots[dot_pos.x][dot_pos.y] = null
-			dot_one.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
-			store_info(dot_one, first_place, Vector2(dot_pos.x, dot_pos.y), last_direction)
-			slide_timer.start()
-		else:
-			# stop sliding
-			find_matches()
+			swap_across(next_pos)
+		state = move
+		return
+	all_dots[dot_pos.x][dot_pos.y] = dot_one
+	all_dots[start_pos.x][start_pos.y] = null
+	dot_one.move(grid_to_pixel(dot_pos.x, dot_pos.y))
+	store_info(dot_one, start_pos, Vector2(dot_pos.x, dot_pos.y), last_direction)
+	find_matches()
 
 func store_info(first_dot, first_place, place, direction):
 	dot_one = first_dot
@@ -273,18 +274,15 @@ func store_info(first_dot, first_place, place, direction):
 	last_direction = direction
 
 func swap_across(dot_pos):
-	all_dots[dot_pos.x][dot_pos.y] = null
 	var first_dot = dot_one
-	var second_dot = all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y]
+	var second_dot = all_dots[dot_pos.x][dot_pos.y]
 	all_dots[first_place.x][first_place.y] = second_dot
-	all_dots[dot_pos.x + last_direction.x][dot_pos.y + last_direction.y] = first_dot
-	first_dot.move(grid_to_pixel(dot_pos.x + last_direction.x, dot_pos.y + last_direction.y))
+	all_dots[dot_pos.x][dot_pos.y] = first_dot
+	first_dot.move(grid_to_pixel(dot_pos.x, dot_pos.y))
 	second_dot.move(grid_to_pixel(first_place.x, first_place.y))
 
 func swap_back():
 	if dot_one != null:
-		all_dots[first_place.x][first_place.y] = dot_one
-		all_dots[last_place.x + last_direction.x][last_place.y + last_direction.y] = null
 		dot_one.move(grid_to_pixel(first_place.x, first_place.y))
 	
 func touch_difference(grid_1, grid_2):
@@ -348,9 +346,7 @@ func find_matches():
 	destroy_timer.start()
 
 func is_piece_null(column, row):
-	if all_dots[column][row] == null:
-		return true
-	return false
+	return all_dots[column][row] == null
 
 func match_and_dim(item):
 	item.matched = true
