@@ -13,9 +13,14 @@ func _on_grid_game_over():
 func _on_grid_level_complete():
 	$HUD/LevelCompleteText.visible = true
 	$HUD/ContinueButton.visible = true
+	$HUD/UndoButton.disabled = true
 
 func _on_continue_button_pressed():
 	$HUD/LevelCompleteText.visible = false
 	$HUD/ContinueButton.visible = false
 	$Grid.next_level()
 	$HUD/LevelText.text = "[center]Level %d[/center]" % $Grid.level
+	$HUD/UndoButton.disabled = false
+
+func _on_undo_button_pressed():
+	$Grid.undo_move()

@@ -55,6 +55,15 @@ theme_override_font_sizes/normal_font_size = 45
 bbcode_enabled = true
 text = "[center]Level 99[/center]"
 
+[node name="UndoButton" type="Button" parent="HUD"]
+offset_left = 804.0
+offset_top = 878.0
+offset_right = 943.0
+offset_bottom = 943.0
+theme_override_font_sizes/font_size = 40
+text = "UNDO"
+
 [connection signal="game_over" from="Grid" to="." method="_on_grid_game_over"]
 [connection signal="level_complete" from="Grid" to="." method="_on_grid_level_complete"]
 [connection signal="pressed" from="HUD/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="HUD/UndoButton" to="." method="_on_undo_button_pressed"]

@@ -40,6 +40,7 @@ var refill_timer = Timer.new()
 var all_dots = []
 var possible_dots
 var num_colors : int
+var move_history = []
 
 var dot_one = null
 var dot_two = null
@@ -57,11 +58,8 @@ func next_level():
 	reset()
 
 func reset():
-	for i in width:
-		for j in height:
-			if all_dots[i][j]:
-				all_dots[i][j].queue_free()
-				all_dots[i][j] = null
+	clear_board(all_dots)
+	clear_history()
 	num_colors = 3 + (level - 1) / 4
 	possible_dots = all_possible_dots.slice(0, num_colors)
 	select_anchors()
@@ -167,15 +165,18 @@ func spawn_dots():
 			var pos = Vector2(i, j)
 			if !in_corner(pos) and (!in_center(pos) or is_anchor_space(pos)):
 				var rand = floor(randf_range(0, possible_dots.size()))
-				var dot = possible_dots[rand].instantiate()
+				var scene = possible_dots[rand]
+				var dot = scene.instantiate()
+				dot.scene = scene
 				all_dots[i][j] = dot
 				var loops = 0
 				while (is_anchor_space(pos) and center_match() and loops < 100):
-				#while (match_at(i, j, dot.color) && loops < 100):
 					print("found anchor match")
 					dot.queue_free()
 					rand = floor(randf_range(0,possible_dots.size()))
-					dot = possible_dots[rand].instantiate()
+					scene = possible_dots[rand]
+					dot = scene.instantiate()
+					dot.scene = scene
 					all_dots[i][j] = dot
 					loops += 1
 				dot.position = grid_to_pixel(i, j)
@@ -198,17 +199,6 @@ func center_match():
 			if find_match(i, j):
 				return true
 	return false
-
-#func match_at(i, j, color):
-	#if i > 1:
-		#if all_dots[i - 1][j] != null && all_dots[i - 2][j] != null:
-			#if all_dots[i - 1][j].color == color && all_dots[i - 2][j].color == color:
-				#return true
-	#if j > 1:
-		#if all_dots[i][j - 1] != null && all_dots[i][j - 2] != null:
-			#if all_dots[i][j - 1].color == color && all_dots[i][j - 2].color == color:
-				#return true
-	#pass
 
 func grid_to_pixel(column, row):
 	var new_x = x_start + offset * column
@@ -244,11 +234,9 @@ func swap_dots(column, row, direction):
 	var other_dot = all_dots[column + direction.x][row + direction.y]
 	if first_dot != null and !in_center(Vector2(column, row)) \
 		and other_dot == null and in_center(Vector2(column + direction.x, row + direction.y)):
+		save_move()
 		store_info(first_dot, Vector2(column, row), Vector2(column, row), direction)
 		state = wait
-		#all_dots[column + direction.x][row + direction.y] = first_dot
-		#all_dots[column][row] = null
-		#first_dot.move(grid_to_pixel(column + direction.x, row + direction.y))
 		slide_dots()
 
 func slide_dots():
@@ -295,23 +283,56 @@ func swap_across(dot_pos):
 func swap_back():
 	if dot_one != null:
 		dot_one.move(grid_to_pixel(first_place.x, first_place.y))
-	
-func touch_difference(grid_1, grid_2):
-	var difference = grid_2 - grid_1
-	if abs(difference.x) > abs(difference.y):
-		if difference.x > 0:
-			swap_dots(grid_1.x, grid_1.y, Vector2(1, 0))
-		elif difference.x < 0:
-			swap_dots(grid_1.x, grid_1.y, Vector2(-1, 0))
-	elif abs(difference.y) > abs(difference.x):
-		if difference.y > 0:
-			swap_dots(grid_1.x, grid_1.y, Vector2(0, 1))
-		elif difference.y < 0:
-			swap_dots(grid_1.x, grid_1.y, Vector2(0, -1))
 
 func _process(_delta):
 	if state == move:
 		touch_input()
+
+func save_move():
+	var last_move = make_2d_array()
+	copy_board(all_dots, last_move)
+	move_history.push_front(last_move)
+
+func undo_move():
+	if move_history.size() > 0:
+		var last_move = move_history.pop_front()
+		clear_board(all_dots)
+		copy_board(last_move, all_dots)
+		sync_board()
+
+func copy_board(src, dest):
+	for i in width:
+		for j in height:
+			if src[i][j]:
+				dest[i][j] = src[i][j].scene.instantiate()
+				dest[i][j].scene = src[i][j].scene
+			else:
+				dest[i][j] = null
+
+func clear_board(dots):
+	for i in width:
+		for j in height:
+			if dots[i][j]:
+				dots[i][j].queue_free()
+			dots[i][j] = null
+
+func sync_board():
+	for i in width:
+		for j in height:
+			if all_dots[i][j]:
+				if is_anchor_space(Vector2(i, j)):
+					all_dots[i][j].anchor = true
+				add_child(all_dots[i][j])
+				all_dots[i][j].position = grid_to_pixel(i, j)
+	for pos in anchor_spaces:
+		var anchor_dot = all_dots[pos.x][pos.y]
+		if anchor_dot:
+			anchor_dot.show_marker()
+
+func clear_history():
+	for board in move_history:
+		clear_board(board)
+	move_history = []
 
 func find_matches():
 	for i in range(side_rows, width - side_rows):
@@ -320,45 +341,6 @@ func find_matches():
 			if matched:
 				for dot in matched:
 					match_and_dim(dot)
-					
-			#if all_dots[i][j] != null:
-				#var current_color = all_dots[i][j].color
-				#if i > side_rows && i < width - side_rows - 1:
-					#if !is_piece_null(i - 1, j) && !is_piece_null(i + 1, j):
-						#if all_dots[i - 1][j].color == current_color && all_dots[i + 1][j].color == current_color:
-							#match_and_dim(all_dots[i - 1][j])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i + 1][j])
-				#if j > side_rows && j < height - side_rows - 1:
-					#if !is_piece_null(i, j - 1) && !is_piece_null(i, j + 1):
-						#if all_dots[i][j - 1].color == current_color && all_dots[i][j + 1].color == current_color:
-							#match_and_dim(all_dots[i][j - 1])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i][j + 1])
-				#if j > side_rows and i < width - side_rows - 1:
-					#if !is_piece_null(i, j - 1) and !is_piece_null(i + 1, j):
-						#if all_dots[i][j - 1].color == current_color && all_dots[i + 1][j].color == current_color:
-							#match_and_dim(all_dots[i][j - 1])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i + 1][j])
-				#if i > side_rows and j < width - side_rows - 1:
-					#if !is_piece_null(i - 1, j) and !is_piece_null(i, j + 1):
-						#if all_dots[i - 1][j].color == current_color && all_dots[i][j + 1].color == current_color:
-							#match_and_dim(all_dots[i - 1][j])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i][j + 1])
-				#if j < height - side_rows - 1 and i < width - side_rows - 1:
-					#if !is_piece_null(i, j + 1) and !is_piece_null(i + 1, j):
-						#if all_dots[i][j + 1].color == current_color && all_dots[i + 1][j].color == current_color:
-							#match_and_dim(all_dots[i][j + 1])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i + 1][j])
-				#if j > side_rows and i > side_rows:
-					#if !is_piece_null(i, j - 1) and !is_piece_null(i - 1, j):
-						#if all_dots[i][j - 1].color == current_color && all_dots[i - 1][j].color == current_color:
-							#match_and_dim(all_dots[i][j - 1])
-							#match_and_dim(all_dots[i][j])
-							#match_and_dim(all_dots[i - 1][j])
 	destroy_timer.start()
 
 func find_match(i, j):
@@ -468,7 +450,9 @@ func refill_columns():
 		var j = height - 1
 		if all_dots[i][j] == null:
 			var rand = floor(randf_range(0, possible_dots.size()))
-			var dot = possible_dots[rand].instantiate()
+			var scene = possible_dots[rand]
+			var dot = scene.instantiate()
+			dot.scene = scene
 			add_child(dot)
 			dot.position = grid_to_pixel(i, j - y_offset)
 			dot.move(grid_to_pixel(i,j))
@@ -477,7 +461,9 @@ func refill_columns():
 		var j = 0
 		if all_dots[i][j] == null:
 			var rand = floor(randf_range(0, possible_dots.size()))
-			var dot = possible_dots[rand].instantiate()
+			var scene = possible_dots[rand]
+			var dot = scene.instantiate()
+			dot.scene = scene
 			add_child(dot)
 			dot.position = grid_to_pixel(i, j + y_offset)
 			dot.move(grid_to_pixel(i,j))
@@ -486,7 +472,9 @@ func refill_columns():
 		var i = width - 1
 		if all_dots[i][j] == null:
 			var rand = floor(randf_range(0, possible_dots.size()))
-			var dot = possible_dots[rand].instantiate()
+			var scene = possible_dots[rand]
+			var dot = scene.instantiate()
+			dot.scene = scene
 			add_child(dot)
 			dot.position = grid_to_pixel(i - y_offset, j)
 			dot.move(grid_to_pixel(i,j))
@@ -495,7 +483,9 @@ func refill_columns():
 		var i = 0
 		if all_dots[i][j] == null:
 			var rand = floor(randf_range(0, possible_dots.size()))
-			var dot = possible_dots[rand].instantiate()
+			var scene = possible_dots[rand]
+			var dot = scene.instantiate()
+			dot.scene = scene
 			add_child(dot)
 			dot.position = grid_to_pixel(i + y_offset, j)
 			dot.move(grid_to_pixel(i,j))

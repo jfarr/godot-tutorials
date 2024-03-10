@@ -5,6 +5,7 @@ extends Node2D
 @onready var marker = get_node("Polygon2D")
 var anchor = false
 var matched = false
+var scene : PackedScene
 
 func _ready():
 	get_node("Polygon2D").visible = anchor
