@@ -31,6 +31,7 @@ enum Bounce {disallow, discard, keep}
 	preload("res://Scenes/Dots/pink_dot.tscn"),
 	preload("res://Scenes/Dots/grey_dot.tscn"),
 ]
+@onready var diamond = preload("res://Scenes/diamond.tscn")
 
 var swap_timer = Timer.new()
 var destroy_timer = Timer.new()
@@ -53,6 +54,15 @@ func _ready():
 	setup_timers()
 	randomize()
 	all_dots = make_2d_array()
+	make_grid()
+
+func make_grid():
+	for i in width - 2 * side_rows - 1:
+		for j in height - 2 * side_rows - 1:
+			var dot = diamond.instantiate()
+			dot.position = grid_to_pixel(i + side_rows, j + side_rows) + Vector2(offset / 2, -offset / 2)
+			dot.scale = Vector2(0.08, 0.08)
+			add_child(dot)
 
 func next_level():
 	level += 1
