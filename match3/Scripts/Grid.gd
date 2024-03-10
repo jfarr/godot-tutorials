@@ -168,16 +168,20 @@ func spawn_dots():
 			if !in_corner(pos) and (!in_center(pos) or is_anchor_space(pos)):
 				var rand = floor(randf_range(0, possible_dots.size()))
 				var dot = possible_dots[rand].instantiate()
+				all_dots[i][j] = dot
 				var loops = 0
-				while (match_at(i, j, dot.color) && loops < 100):
+				while (is_anchor_space(pos) and center_match() and loops < 100):
+				#while (match_at(i, j, dot.color) && loops < 100):
+					print("found anchor match")
+					dot.queue_free()
 					rand = floor(randf_range(0,possible_dots.size()))
-					loops += 1
 					dot = possible_dots[rand].instantiate()
+					all_dots[i][j] = dot
+					loops += 1
 				dot.position = grid_to_pixel(i, j)
 				if is_anchor_space(pos):
 					dot.anchor = true
 				add_child(dot)
-				all_dots[i][j] = dot
 	for pos in anchor_spaces:
 		var anchor_dot = all_dots[pos.x][pos.y]
 		anchor_dot.show_marker()
@@ -188,16 +192,23 @@ func in_corner(pos : Vector2):
 func in_center(pos : Vector2):
 	return pos.x >= side_rows and pos.x < width - side_rows and pos.y >= side_rows and pos.y < height - side_rows
 
-func match_at(i, j, color):
-	if i > 1:
-		if all_dots[i - 1][j] != null && all_dots[i - 2][j] != null:
-			if all_dots[i - 1][j].color == color && all_dots[i - 2][j].color == color:
+func center_match():
+	for i in range(side_rows, width - side_rows):
+		for j in range(side_rows, height - side_rows):
+			if find_match(i, j):
 				return true
-	if j > 1:
-		if all_dots[i][j - 1] != null && all_dots[i][j - 2] != null:
-			if all_dots[i][j - 1].color == color && all_dots[i][j - 2].color == color:
-				return true
-	pass
+	return false
+
+#func match_at(i, j, color):
+	#if i > 1:
+		#if all_dots[i - 1][j] != null && all_dots[i - 2][j] != null:
+			#if all_dots[i - 1][j].color == color && all_dots[i - 2][j].color == color:
+				#return true
+	#if j > 1:
+		#if all_dots[i][j - 1] != null && all_dots[i][j - 2] != null:
+			#if all_dots[i][j - 1].color == color && all_dots[i][j - 2].color == color:
+				#return true
+	#pass
 
 func grid_to_pixel(column, row):
 	var new_x = x_start + offset * column
@@ -305,45 +316,79 @@ func _process(_delta):
 func find_matches():
 	for i in range(side_rows, width - side_rows):
 		for j in range(side_rows, height - side_rows):
-			if all_dots[i][j] != null:
-				var current_color = all_dots[i][j].color
-				if i > side_rows && i < width - side_rows - 1:
-					if !is_piece_null(i - 1, j) && !is_piece_null(i + 1, j):
-						if all_dots[i - 1][j].color == current_color && all_dots[i + 1][j].color == current_color:
-							match_and_dim(all_dots[i - 1][j])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i + 1][j])
-				if j > side_rows && j < height - side_rows - 1:
-					if !is_piece_null(i, j - 1) && !is_piece_null(i, j + 1):
-						if all_dots[i][j - 1].color == current_color && all_dots[i][j + 1].color == current_color:
-							match_and_dim(all_dots[i][j - 1])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i][j + 1])
-				if j > side_rows and i < width - side_rows - 1:
-					if !is_piece_null(i, j - 1) and !is_piece_null(i + 1, j):
-						if all_dots[i][j - 1].color == current_color && all_dots[i + 1][j].color == current_color:
-							match_and_dim(all_dots[i][j - 1])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i + 1][j])
-				if i > side_rows and j < width - side_rows - 1:
-					if !is_piece_null(i - 1, j) and !is_piece_null(i, j + 1):
-						if all_dots[i - 1][j].color == current_color && all_dots[i][j + 1].color == current_color:
-							match_and_dim(all_dots[i - 1][j])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i][j + 1])
-				if j < height - side_rows - 1 and i < width - side_rows - 1:
-					if !is_piece_null(i, j + 1) and !is_piece_null(i + 1, j):
-						if all_dots[i][j + 1].color == current_color && all_dots[i + 1][j].color == current_color:
-							match_and_dim(all_dots[i][j + 1])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i + 1][j])
-				if j > side_rows and i > side_rows:
-					if !is_piece_null(i, j - 1) and !is_piece_null(i - 1, j):
-						if all_dots[i][j - 1].color == current_color && all_dots[i - 1][j].color == current_color:
-							match_and_dim(all_dots[i][j - 1])
-							match_and_dim(all_dots[i][j])
-							match_and_dim(all_dots[i - 1][j])
+			var matched = find_match(i, j)
+			if matched:
+				for dot in matched:
+					match_and_dim(dot)
+					
+			#if all_dots[i][j] != null:
+				#var current_color = all_dots[i][j].color
+				#if i > side_rows && i < width - side_rows - 1:
+					#if !is_piece_null(i - 1, j) && !is_piece_null(i + 1, j):
+						#if all_dots[i - 1][j].color == current_color && all_dots[i + 1][j].color == current_color:
+							#match_and_dim(all_dots[i - 1][j])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i + 1][j])
+				#if j > side_rows && j < height - side_rows - 1:
+					#if !is_piece_null(i, j - 1) && !is_piece_null(i, j + 1):
+						#if all_dots[i][j - 1].color == current_color && all_dots[i][j + 1].color == current_color:
+							#match_and_dim(all_dots[i][j - 1])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i][j + 1])
+				#if j > side_rows and i < width - side_rows - 1:
+					#if !is_piece_null(i, j - 1) and !is_piece_null(i + 1, j):
+						#if all_dots[i][j - 1].color == current_color && all_dots[i + 1][j].color == current_color:
+							#match_and_dim(all_dots[i][j - 1])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i + 1][j])
+				#if i > side_rows and j < width - side_rows - 1:
+					#if !is_piece_null(i - 1, j) and !is_piece_null(i, j + 1):
+						#if all_dots[i - 1][j].color == current_color && all_dots[i][j + 1].color == current_color:
+							#match_and_dim(all_dots[i - 1][j])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i][j + 1])
+				#if j < height - side_rows - 1 and i < width - side_rows - 1:
+					#if !is_piece_null(i, j + 1) and !is_piece_null(i + 1, j):
+						#if all_dots[i][j + 1].color == current_color && all_dots[i + 1][j].color == current_color:
+							#match_and_dim(all_dots[i][j + 1])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i + 1][j])
+				#if j > side_rows and i > side_rows:
+					#if !is_piece_null(i, j - 1) and !is_piece_null(i - 1, j):
+						#if all_dots[i][j - 1].color == current_color && all_dots[i - 1][j].color == current_color:
+							#match_and_dim(all_dots[i][j - 1])
+							#match_and_dim(all_dots[i][j])
+							#match_and_dim(all_dots[i - 1][j])
 	destroy_timer.start()
+
+func find_match(i, j):
+	if !is_piece_null(i, j):
+		var current_color = all_dots[i][j].color
+		if i > side_rows && i < width - side_rows - 1:
+			if !is_piece_null(i - 1, j) && !is_piece_null(i + 1, j):
+				if all_dots[i - 1][j].color == current_color && all_dots[i + 1][j].color == current_color:
+					return [all_dots[i - 1][j], all_dots[i][j], all_dots[i + 1][j]]
+		if j > side_rows && j < height - side_rows - 1:
+			if !is_piece_null(i, j - 1) && !is_piece_null(i, j + 1):
+				if all_dots[i][j - 1].color == current_color && all_dots[i][j + 1].color == current_color:
+					return [all_dots[i][j - 1], all_dots[i][j], all_dots[i][j + 1]]
+		if j > side_rows and i < width - side_rows - 1:
+			if !is_piece_null(i, j - 1) and !is_piece_null(i + 1, j):
+				if all_dots[i][j - 1].color == current_color && all_dots[i + 1][j].color == current_color:
+					return [all_dots[i][j - 1], all_dots[i][j], all_dots[i + 1][j]]
+		if i > side_rows and j < width - side_rows - 1:
+			if !is_piece_null(i - 1, j) and !is_piece_null(i, j + 1):
+				if all_dots[i - 1][j].color == current_color && all_dots[i][j + 1].color == current_color:
+					return [all_dots[i - 1][j], all_dots[i][j], all_dots[i][j + 1]]
+		if j < height - side_rows - 1 and i < width - side_rows - 1:
+			if !is_piece_null(i, j + 1) and !is_piece_null(i + 1, j):
+				if all_dots[i][j + 1].color == current_color && all_dots[i + 1][j].color == current_color:
+					return [all_dots[i][j + 1], all_dots[i][j], all_dots[i + 1][j]]
+		if j > side_rows and i > side_rows:
+			if !is_piece_null(i, j - 1) and !is_piece_null(i - 1, j):
+				if all_dots[i][j - 1].color == current_color && all_dots[i - 1][j].color == current_color:
+					return [all_dots[i][j - 1], all_dots[i][j], all_dots[i - 1][j]]
+	return null
 
 func is_piece_null(column, row):
 	return all_dots[column][row] == null
