@@ -7,6 +7,7 @@
 script = ExtResource("1_ic05t")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+z_index = -1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -62,6 +63,14 @@ offset_right = 943.0
 offset_bottom = 943.0
 theme_override_font_sizes/font_size = 40
 text = "UNDO"
+
+[node name="Panel" type="Panel" parent="."]
+z_index = -1
+offset_left = 180.0
+offset_top = 180.0
+offset_right = 780.0
+offset_bottom = 780.0
+mouse_filter = 2
 
 [connection signal="game_over" from="Grid" to="." method="_on_grid_game_over"]
 [connection signal="level_complete" from="Grid" to="." method="_on_grid_level_complete"]
