@@ -182,7 +182,6 @@ func spawn_dots():
 				all_dots[i][j] = dot
 				var loops = 0
 				while (is_anchor_space(pos) and center_match() and loops < 100):
-					print("found anchor match")
 					dot.queue_free()
 					rand = floor(randf_range(0,possible_dots.size()))
 					scene = possible_dots[rand]
