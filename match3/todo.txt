@@ -1,2 +1,2 @@
-- add title to menu screen: Slipshot
+- window resize
 - tutorial
